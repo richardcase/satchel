@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/lint"
+	"github.com/richardcase/satchel/internal/lint"
 )
 
 func writeSkill(t *testing.T, dir, body string) {

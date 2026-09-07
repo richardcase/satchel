@@ -95,7 +95,7 @@ func TestNotInstalledWithNoMatchesNamesList(t *testing.T) {
 	if strings.Contains(msg, "did you mean") {
 		t.Errorf("message suggests something it should not: %q", msg)
 	}
-	if !strings.Contains(msg, "skillsctl list") {
+	if !strings.Contains(msg, "satchel list") {
 		t.Errorf("message does not name the remedy: %q", msg)
 	}
 }

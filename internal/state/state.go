@@ -37,7 +37,7 @@ type holder struct {
 }
 
 // readHolder best-effort reads whoever currently holds path. A missing or
-// unparsable file (an older skillsctl, or a race with the write below) just
+// unparsable file (an older satchel, or a race with the write below) just
 // means the wait message has no name to give.
 func readHolder(path string) (holder, bool) {
 	blob, err := os.ReadFile(path)
@@ -165,7 +165,7 @@ func Open(ctx context.Context, path string, notify io.Writer) (*Handle, error) {
 		db.Version = SchemaVersion
 	case db.Version > SchemaVersion:
 		_ = lock.Unlock()
-		return nil, fmt.Errorf("%s was written by a newer skillsctl (schema %d, this build understands %d): upgrade skillsctl", path, db.Version, SchemaVersion)
+		return nil, fmt.Errorf("%s was written by a newer satchel (schema %d, this build understands %d): upgrade satchel", path, db.Version, SchemaVersion)
 	case db.Version < SchemaVersion:
 		_ = lock.Unlock()
 		return nil, fmt.Errorf("%s uses schema %d and this build understands %d, but no migration exists", path, db.Version, SchemaVersion)
@@ -191,9 +191,9 @@ func acquire(ctx context.Context, lock *flock.Flock, lockPath string, notify io.
 
 	if notify != nil {
 		if h, found := readHolder(lockPath); found {
-			_, _ = fmt.Fprintf(notify, "waiting for the skillsctl lock at %s (held by pid %d since %s)...\n", lockPath, h.PID, h.Since.Format(time.RFC3339))
+			_, _ = fmt.Fprintf(notify, "waiting for the satchel lock at %s (held by pid %d since %s)...\n", lockPath, h.PID, h.Since.Format(time.RFC3339))
 		} else {
-			_, _ = fmt.Fprintf(notify, "waiting for the skillsctl lock at %s...\n", lockPath)
+			_, _ = fmt.Fprintf(notify, "waiting for the satchel lock at %s...\n", lockPath)
 		}
 	}
 
@@ -215,7 +215,7 @@ func acquire(ctx context.Context, lock *flock.Flock, lockPath string, notify io.
 	if waitErr != nil && !errors.Is(waitErr, context.DeadlineExceeded) {
 		return fmt.Errorf("lock state: %w", waitErr)
 	}
-	return fmt.Errorf("timed out after %s waiting for the skillsctl lock at %s: if the holding process is no longer running, remove that file", lockTimeout, lockPath)
+	return fmt.Errorf("timed out after %s waiting for the satchel lock at %s: if the holding process is no longer running, remove that file", lockTimeout, lockPath)
 }
 
 // Commit writes the DB atomically. Changes are lost unless Commit is called.

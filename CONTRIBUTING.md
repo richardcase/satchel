@@ -1,4 +1,4 @@
-# Contributing to skillsctl
+# Contributing to satchel
 
 Thanks for taking the time to contribute. This file covers how to get set up
 and submit a change; [AGENTS.md](AGENTS.md) is the source of truth for build
@@ -8,7 +8,7 @@ commands, architecture, and code conventions — read it before writing code.
 
 ```bash
 mise install      # pins go, golangci-lint, goreleaser to the versions CI uses
-make build         # go build -o skillsctl ./cmd/skillsctl
+make build         # go build -o satchel ./cmd/satchel
 ```
 
 ## Before opening a pull request
@@ -34,7 +34,7 @@ types, and real examples from this repository's history.
 ## Reporting bugs and requesting features
 
 Use the issue templates offered when you open a
-[new issue](https://github.com/richardcase/skillsctl/issues/new/choose).
+[new issue](https://github.com/richardcase/satchel/issues/new/choose).
 
 ## Reporting a vulnerability
 

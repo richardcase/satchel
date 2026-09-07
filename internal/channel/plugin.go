@@ -8,18 +8,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // Plugin installs Claude Code plugins by asking Claude Code to do it. The
 // agent owns the files, so there is nothing to put in the store and nothing to
 // symlink: a plugin's skills are already visible to the agent that installed
-// it. What skillsctl adds is the receipt, so that list can see it and remove
+// it. What satchel adds is the receipt, so that list can see it and remove
 // can undo it.
 type Plugin struct {
 	claude claudex.Plugins
@@ -42,7 +42,7 @@ func pluginID(src source.Source) string { return src.Plugin + "@" + src.Marketpl
 
 // Prepare asks the agent what it already has. A plugin it has installed
 // already is adopted rather than installed again, which makes install
-// idempotent and gives a way to bring an existing plugin under skillsctl
+// idempotent and gives a way to bring an existing plugin under satchel
 // without uninstalling it first.
 func (c *Plugin) Prepare(ctx context.Context, req Request) ([]Candidate, []string, error) {
 	if err := rejectRepositoryFlags(req); err != nil {
@@ -180,17 +180,17 @@ func (c *Plugin) Update(ctx context.Context, rs []*state.Receipt, _ UpdateOption
 		got, ok := find(installed, r.Source)
 		if !ok {
 			verdicts = append(verdicts, fail(v, fmt.Errorf(
-				"claude no longer has %s installed: run `skillsctl remove %s` and install it again", r.Source, r.Name)))
+				"claude no longer has %s installed: run `satchel remove %s` and install it again", r.Source, r.Name)))
 			continue
 		}
 
 		// claude reports what it has now, before this update's exec runs. When
 		// that already disagrees with the receipt — a `claude plugin update` run
-		// outside skillsctl, say — this update's own "moved from X to Y" line
+		// outside satchel, say — this update's own "moved from X to Y" line
 		// would otherwise read as contradicting what claude just said about
 		// itself: both are true, but only one of them is news.
 		if got.Version != "" && got.Version != r.Resolved {
-			v.Note = fmt.Sprintf("claude was already at %s; skillsctl's record had fallen behind", got.Version)
+			v.Note = fmt.Sprintf("claude was already at %s; satchel's record had fallen behind", got.Version)
 		}
 
 		p.Add(plan.Exec{Argv: c.claude.UpdateArgv(r.Source)})
@@ -247,7 +247,7 @@ func (c *Plugin) Settle(ctx context.Context, rs []state.Receipt) ([]state.Receip
 	}
 
 	if len(missing) > 0 {
-		return changed, fmt.Errorf("claude reports no install for %s, so the version could not be recorded; `skillsctl list` will show it blank until the next update",
+		return changed, fmt.Errorf("claude reports no install for %s, so the version could not be recorded; `satchel list` will show it blank until the next update",
 			strings.Join(missing, ", "))
 	}
 	return changed, nil
@@ -289,7 +289,7 @@ func (c *Plugin) Remove(r state.Receipt, drop map[string]bool) (plan.Plan, error
 	if owner := c.owner(drop); owner != "" {
 		if stranded := strandedAgents(r, drop); len(stranded) > 0 {
 			return plan.Plan{}, fmt.Errorf("%s owns the %s plugin, and uninstalling it would strand its skills in %s\n"+
-				"run `skillsctl remove %s` to remove it everywhere",
+				"run `satchel remove %s` to remove it everywhere",
 				owner, r.Name, strings.Join(stranded, ", "), r.Name)
 		}
 		p.Add(plan.Exec{Argv: c.claude.UninstallArgv(r.Source)})
@@ -392,7 +392,7 @@ func targetNames(ts []target.Target) []string {
 	return names
 }
 
-// Rollback refuses: an agent-owned plugin has no revision history skillsctl
+// Rollback refuses: an agent-owned plugin has no revision history satchel
 // can swap back to — claude decides which version is installed.
 func (c *Plugin) Rollback(context.Context, state.Receipt, bool) (plan.Plan, Verdict, error) {
 	return plan.Plan{}, Verdict{}, ErrRollbackUnsupported
@@ -454,8 +454,8 @@ func (c *Plugin) skills(r state.Receipt) ([]pluginSkill, error) {
 	// nothing on disk to name and "" is not a directory would just be
 	// confusing about why.
 	if r.RevPath == "" {
-		return nil, fmt.Errorf("refusing to link %s: skillsctl never learned where claude installed it; "+
-			"run `skillsctl update %s` once claude reports it", r.Name, r.Name)
+		return nil, fmt.Errorf("refusing to link %s: satchel never learned where claude installed it; "+
+			"run `satchel update %s` once claude reports it", r.Name, r.Name)
 	}
 	// target.Link would create a symlink whether or not anything is on the other
 	// end of it, and a dangling entry in a skills directory is worse than a
@@ -505,7 +505,7 @@ func linkOpFor(t target.Target, linkPath, dest string, ours bool) (plan.Op, stri
 	case os.IsNotExist(err):
 		return plan.Link{Target: t.Name, LinkPath: linkPath, RevPath: dest}, ""
 	case err != nil:
-		return nil, fmt.Sprintf("skipped %s for %s: %s is not a symlink skillsctl can replace",
+		return nil, fmt.Sprintf("skipped %s for %s: %s is not a symlink satchel can replace",
 			filepath.Base(linkPath), t.Name, linkPath)
 	case got == dest:
 		return nil, ""

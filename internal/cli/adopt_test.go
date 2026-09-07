@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // handLink puts a symlink in an agent's skills directory the way somebody
@@ -147,7 +147,7 @@ func TestAdoptSkipsARealDirectory(t *testing.T) {
 	if code != ExitError {
 		t.Errorf("exit = %d, want %d when nothing could be adopted", code, ExitError)
 	}
-	if !strings.Contains(out, "not a symlink") || !strings.Contains(out, "skillsctl link") {
+	if !strings.Contains(out, "not a symlink") || !strings.Contains(out, "satchel link") {
 		t.Errorf("output = %q, want the reason and the remedy", out)
 	}
 	// The directory is still there, whole.
@@ -351,7 +351,7 @@ func TestGCIsUnaffectedByAnAdoptedCheckout(t *testing.T) {
 	}
 }
 
-// The case a hand-check found: everything skillsctl installs points into the
+// The case a hand-check found: everything satchel installs points into the
 // store, so a managed skill must be recognised as managed before it is judged
 // on where it points.
 func TestAdoptLeavesAnInstalledSkillAlone(t *testing.T) {
@@ -379,7 +379,7 @@ func TestAdoptLeavesAnInstalledSkillAlone(t *testing.T) {
 }
 
 // A hand-made symlink into a second agent, pointing at the revision the receipt
-// is already on, is the link `skillsctl link <name> -a <agent>` would have
+// is already on, is the link `satchel link <name> -a <agent>` would have
 // written. adopt records it rather than reporting it as unadoptable.
 func TestAdoptAddsAHandMadeSecondLinkToAManagedSkill(t *testing.T) {
 	h := newHarness(t)

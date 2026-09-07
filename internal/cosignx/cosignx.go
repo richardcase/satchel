@@ -20,7 +20,7 @@ var ErrNotFound = errors.New(
 	"cosign was not found on PATH: install cosign to sign or verify OCI images, " +
 		"or drop --sign-key/--verify-key")
 
-// Cosign is the set of cosign operations skillsctl needs.
+// Cosign is the set of cosign operations satchel needs.
 type Cosign interface {
 	// Verify checks ref's signature against a public key file, entirely
 	// offline (no Rekor/Fulcio/transparency-log calls).

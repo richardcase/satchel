@@ -12,8 +12,8 @@ import (
 	"io"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // SchemaVersion is the manifest format version. Bump it only for a breaking
@@ -80,7 +80,7 @@ func Decode(b []byte) (File, error) {
 	case f.Version < 0:
 		return File{}, fmt.Errorf("manifest version %d is not a version", f.Version)
 	case f.Version > SchemaVersion:
-		return File{}, fmt.Errorf("this manifest is version %d and this build understands %d: upgrade skillsctl",
+		return File{}, fmt.Errorf("this manifest is version %d and this build understands %d: upgrade satchel",
 			f.Version, SchemaVersion)
 	}
 

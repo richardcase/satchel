@@ -29,7 +29,7 @@ const MaxDepth = 5
 // large enough to dominate the walk.
 var skipDirs = map[string]bool{".git": true, "node_modules": true}
 
-// Meta is the frontmatter skillsctl cares about.
+// Meta is the frontmatter satchel cares about.
 type Meta struct {
 	Name        string `yaml:"name"`
 	Description string `yaml:"description"`

@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/pack"
-	"github.com/richardcase/skillsctl/internal/testregistry"
+	"github.com/richardcase/satchel/internal/pack"
+	"github.com/richardcase/satchel/internal/testregistry"
 )
 
 func packDir(t *testing.T, dir string) []byte {

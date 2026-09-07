@@ -3,12 +3,12 @@ package channel
 import (
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // Adopting a skill that is already in an agent's skills directory writes a
-// receipt for something skillsctl did not put there. The receipt shapes live
+// receipt for something satchel did not put there. The receipt shapes live
 // here, beside the install receipts they have to match, because a receipt that
 // records provenance differently depending on how it was created would make
 // every command downstream of it ask which kind it was holding.
@@ -19,11 +19,11 @@ import (
 // avoid one.
 
 // AdoptReceipt records a skill that is linked into an agent's skills directory
-// from somewhere skillsctl knows nothing else about.
+// from somewhere satchel knows nothing else about.
 //
 // dest is both the source and the revision path: the symlink's target is the
 // skill, so there is no root to be relative to and no subpath. That is exactly
-// the receipt `skillsctl link <dest>` would have written, which is what makes
+// the receipt `satchel link <dest>` would have written, which is what makes
 // removal identical too — the links go, the directory stays.
 func (c *Local) AdoptReceipt(name, dest string, links []state.Link, now time.Time) state.Receipt {
 	r := localReceipt(name, dest, "", dest, now)

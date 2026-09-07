@@ -216,39 +216,39 @@ func TestConfigPathPrecedence(t *testing.T) {
 		t.Skip("no home directory in this environment")
 	}
 
-	t.Run("SKILLSCTL_CONFIG wins over everything", func(t *testing.T) {
-		t.Setenv("SKILLSCTL_CONFIG", "/explicit/config.toml")
+	t.Run("SATCHEL_CONFIG wins over everything", func(t *testing.T) {
+		t.Setenv("SATCHEL_CONFIG", "/explicit/config.toml")
 		t.Setenv("XDG_CONFIG_HOME", "/xdg")
 		got, err := ConfigPath()
 		if err != nil {
 			t.Fatalf("ConfigPath: %v", err)
 		}
 		if got != "/explicit/config.toml" {
-			t.Errorf("ConfigPath() = %q, want the SKILLSCTL_CONFIG value", got)
+			t.Errorf("ConfigPath() = %q, want the SATCHEL_CONFIG value", got)
 		}
 	})
 
-	t.Run("XDG_CONFIG_HOME wins when SKILLSCTL_CONFIG is unset", func(t *testing.T) {
-		t.Setenv("SKILLSCTL_CONFIG", "")
+	t.Run("XDG_CONFIG_HOME wins when SATCHEL_CONFIG is unset", func(t *testing.T) {
+		t.Setenv("SATCHEL_CONFIG", "")
 		t.Setenv("XDG_CONFIG_HOME", "/xdg")
 		got, err := ConfigPath()
 		if err != nil {
 			t.Fatalf("ConfigPath: %v", err)
 		}
-		want := filepath.Join("/xdg", "skillsctl", "config.toml")
+		want := filepath.Join("/xdg", "satchel", "config.toml")
 		if got != want {
 			t.Errorf("ConfigPath() = %q, want %q", got, want)
 		}
 	})
 
 	t.Run("falls back to ~/.config when neither is set", func(t *testing.T) {
-		t.Setenv("SKILLSCTL_CONFIG", "")
+		t.Setenv("SATCHEL_CONFIG", "")
 		t.Setenv("XDG_CONFIG_HOME", "")
 		got, err := ConfigPath()
 		if err != nil {
 			t.Fatalf("ConfigPath: %v", err)
 		}
-		want := filepath.Join(home, ".config", "skillsctl", "config.toml")
+		want := filepath.Join(home, ".config", "satchel", "config.toml")
 		if got != want {
 			t.Errorf("ConfigPath() = %q, want %q", got, want)
 		}

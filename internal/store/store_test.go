@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
-func TestHomePrefersSkillsctlHome(t *testing.T) {
-	t.Setenv("SKILLSCTL_HOME", "/custom/root")
+func TestHomePrefersSatchelHome(t *testing.T) {
+	t.Setenv("SATCHEL_HOME", "/custom/root")
 	got, err := Home()
 	if err != nil {
 		t.Fatalf("Home: %v", err)
@@ -25,13 +25,13 @@ func TestHomePrefersSkillsctlHome(t *testing.T) {
 }
 
 func TestHomeUsesXDGDataHome(t *testing.T) {
-	t.Setenv("SKILLSCTL_HOME", "")
+	t.Setenv("SATCHEL_HOME", "")
 	t.Setenv("XDG_DATA_HOME", "/xdg/data")
 	got, err := Home()
 	if err != nil {
 		t.Fatalf("Home: %v", err)
 	}
-	want := filepath.Join("/xdg/data", "skillsctl")
+	want := filepath.Join("/xdg/data", "satchel")
 	if got != want {
 		t.Errorf("Home() = %q, want %q", got, want)
 	}

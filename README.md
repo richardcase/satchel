@@ -1,20 +1,20 @@
-# skillsctl
+# satchel
 
 Homebrew for agent skills: install, update and remove agent skills from git
 repositories, Claude plugins, OCI images with a receipt for every install so update and removal are
 deterministic. One store, symlinked into every agent you use.
 
-[![CI](https://github.com/richardcase/skillsctl/actions/workflows/ci.yml/badge.svg)](https://github.com/richardcase/skillsctl/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/richardcase/skillsctl?sort=semver)](https://github.com/richardcase/skillsctl/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/richardcase/skillsctl/total)](https://github.com/richardcase/skillsctl/releases)
+[![CI](https://github.com/richardcase/satchel/actions/workflows/ci.yml/badge.svg)](https://github.com/richardcase/satchel/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/richardcase/satchel?sort=semver)](https://github.com/richardcase/satchel/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/richardcase/satchel/total)](https://github.com/richardcase/satchel/releases)
 [![Homebrew](https://img.shields.io/badge/homebrew-richardcase%2Ftap-orange)](https://github.com/richardcase/homebrew-tap)
 
-[![Go](https://img.shields.io/github/go-mod/go-version/richardcase/skillsctl)](go.mod)
-[![Go Reference](https://pkg.go.dev/badge/github.com/richardcase/skillsctl.svg)](https://pkg.go.dev/github.com/richardcase/skillsctl)
+[![Go](https://img.shields.io/github/go-mod/go-version/richardcase/satchel)](go.mod)
+[![Go Reference](https://pkg.go.dev/badge/github.com/richardcase/satchel.svg)](https://pkg.go.dev/github.com/richardcase/satchel)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 <p align="center">
-  <img src="assets/demo.gif" alt="skillsctl demo: the categorised install tree, choosing agents to install into, list, update --dry-run, remove" width="820">
+  <img src="assets/demo.gif" alt="satchel demo: the categorised install tree, choosing agents to install into, list, update --dry-run, remove" width="820">
 </p>
 
 ## Table of Contents
@@ -40,11 +40,11 @@ Skills spread by copy-paste. You clone a repo into `~/.claude/skills`, copy the
 same directory into `~/.codex/skills`, and a month later nothing records where
 any of it came from, which commit you took, or what to delete to undo it.
 
-`skillsctl` makes that a package-manager problem instead: one fetch, one copy on
+`satchel` makes that a package-manager problem instead: one fetch, one copy on
 disk, symlinks into every agent, and a receipt that makes the reverse operation
 exact.
 
-See [how skillsctl compares to `npx skills`](https://github.com/richardcase/skillsctl/wiki/skillsctl-vs-npx-skills)
+See [how satchel compares to `npx skills`](https://github.com/richardcase/satchel/wiki/skillsctl-vs-npx-skills)
 in the wiki.
 
 ## Features
@@ -53,51 +53,51 @@ in the wiki.
   Code, Codex, Gemini and more — Cursor, Windsurf, Cline, Continue, Zed, Amp,
   OpenCode, GitHub Copilot, Antigravity and Kiro are all built in too. One
   copy to update, not several to keep in sync.
-- **Find a skill without knowing owner/repo.** `skillsctl search <query>`
+- **Find a skill without knowing owner/repo.** `satchel search <query>`
   matches against a curated registry by name, description and tags, printing
-  a source for each match that can be passed straight to `skillsctl install`.
+  a source for each match that can be passed straight to `satchel install`.
   The registry is newly introduced and starts empty — it fills up over time
   through curation PRs, so an early `search` may turn up nothing yet.
-- **A receipt for every install.** `skillsctl list` shows what is installed, at
+- **A receipt for every install.** `satchel list` shows what is installed, at
   which commit, and in which agents. `remove` unlinks exactly what was created —
   it never guesses.
-- **The whole receipt, when you need it.** `skillsctl info <name>` prints what a
+- **The whole receipt, when you need it.** `satchel info <name>` prints what a
   skill is for, where it came from, which revision is installed and where its
   files are — and checks each symlink against the disk, so one that has been
   deleted, broken or re-pointed is named rather than assumed to work.
 - **`--dry-run` that is exact.** Commands build a plan of the mutations and
   print it. What you see is what runs; the dry run is not a separate code path.
-- **Updates that keep your choices.** `skillsctl update` moves a skill to the
+- **Updates that keep your choices.** `satchel update` moves a skill to the
   head of the ref it tracks, keeping the name you installed it under, the agents
   you linked it into, and its pin. A skill you edited through its symlink is
   reported rather than overwritten.
-- **See the change before you take it.** `skillsctl diff <name>` prints the
+- **See the change before you take it.** `satchel diff <name>` prints the
   unified diff between the revision you have installed and the one `update`
   would move to — or, with `--against previous`, the one `rollback` would move
   back to. It is scoped to the skill you installed, not the whole repository,
   and it installs nothing.
-- **Undo an update.** `skillsctl rollback <name>` swaps a skill back onto the
+- **Undo an update.** `satchel rollback <name>` swaps a skill back onto the
   revision it was on before its last update, keeping its name, its agents and
   its pin. It is a toggle, so running it again returns to where you were, and a
   skill you edited through its symlink is reported rather than reverted.
 - **Pin to an immutable commit.** `--ref v1.2.0 --pin` freezes the resolved sha
-  so a later update skips it. `skillsctl pin` and `skillsctl unpin` add and
+  so a later update skips it. `satchel pin` and `satchel unpin` add and
   remove a pin after the fact, without a remove and reinstall.
 - **Safe by construction.** Path-escaping skill names, subpaths and tar entries
   are rejected; an existing file is never clobbered; nothing but its own
   symlinks is ever deleted; and links created by a failed apply are rolled back.
 - **Fast on repeats.** A git mirror cache plus a content-addressed revision
   store means reinstalling a commit you already have does no network work.
-- **Develop a skill in place.** `skillsctl link ./my-skill` registers a
+- **Develop a skill in place.** `satchel link ./my-skill` registers a
   directory you are working in, linked rather than copied, so every edit is live
   in every agent immediately. `remove` takes away the symlinks and never the
   directory.
-- **Move your skills to another machine.** `skillsctl bundle > skills.toml`
+- **Move your skills to another machine.** `satchel bundle > skills.toml`
   writes a small, human-editable manifest of what you have installed;
-  `skillsctl sync skills.toml` installs it somewhere else, pins and all. `sync`
+  `satchel sync skills.toml` installs it somewhere else, pins and all. `sync`
   only ever adds — it reports a difference or a skill the manifest does not
   name, and never removes anything.
-- **Sync against a team's shared manifest.** `skillsctl sync owner/team-skills`
+- **Sync against a team's shared manifest.** `satchel sync owner/team-skills`
   reads `skills.toml` straight out of a git profile repository — the same
   shapes `install` accepts for a skill — instead of a local file, so a team can
   keep one canonical list and every machine stays in sync with it. `--ref`
@@ -106,20 +106,20 @@ in the wiki.
   carried onto the receipt; `list --tag` and `bundle --tag` filter to skills
   carrying any of the given tags, for working with one slice of a large set.
 - **Reach an agent you installed something before you had.**
-  `skillsctl link avoid-ai-writing -a gemini` adds a link to the revision that
+  `satchel link avoid-ai-writing -a gemini` adds a link to the revision that
   skill is already on, without fetching anything or disturbing a pin. It is the
   exact inverse of `remove -a`.
-- **Takes over what is already there.** `skillsctl adopt` records the skills
+- **Takes over what is already there.** `satchel adopt` records the skills
   already sitting in each agent's skills directory, so hand-made symlinks stop
   being invisible. One that leads into a clean git checkout is recorded with the
   sha it is at, pinned; one into a second agent for a skill already managed is
   added to its receipt. Nothing is moved, copied or deleted.
-- **Tells you when something has rotted.** `skillsctl doctor` reports links a
+- **Tells you when something has rotted.** `satchel doctor` reports links a
   receipt records that are gone, links pointing at nothing, one name resolving
   differently in two agents, skills edited in place, and revisions no receipt
   references. It changes nothing and names the command that repairs each finding,
   and it exits non-zero, so it works as a check in CI.
-- **Claude Code plugins too.** `skillsctl install superpowers@claude-plugins-official`
+- **Claude Code plugins too.** `satchel install superpowers@claude-plugins-official`
   installs through `claude plugin`, records a receipt, and links every skill the
   plugin ships into the agents that cannot install plugins themselves — so a
   plugin reaches Codex, Gemini and every other configured agent like anything
@@ -131,33 +131,33 @@ in the wiki.
   bare `install` on such a repository never guesses: at a terminal it lists what
   it found and lets you tick the ones you want, and anywhere else — a pipe, a CI
   job — it prints the same list and stops, so a script still has to say.
-- **Package skills into a container image.** `skillsctl package <source-dir> <oci-ref>`
+- **Package skills into a container image.** `satchel package <source-dir> <oci-ref>`
   bundles a directory of skills into an OCI artifact and pushes it to any
-  registry `docker` can reach; `skillsctl install oci://registry/repo:tag`
+  registry `docker` can reach; `satchel install oci://registry/repo:tag`
   installs from one, and `outdated`/`update` follow a moved tag the same way
   they follow a moved git ref. `package --sign-key <path>` signs the pushed
   image with cosign, and `install --verify-key <path>` verifies it before
   installing — or sign and verify keylessly with `--sign-keyless` and
   `--verify-identity`/`--verify-issuer`, using Sigstore's Fulcio/Rekor flow
   instead of a keypair.
-- **Disk you can get back.** `skillsctl gc` deletes the revisions and mirrors no
+- **Disk you can get back.** `satchel gc` deletes the revisions and mirrors no
   installed skill references, and reports what it freed. Nothing shared is
   collected while any skill still points at it.
-- **Scriptable.** `skillsctl list --json` emits the raw receipts, `info --json`
+- **Scriptable.** `satchel list --json` emits the raw receipts, `info --json`
   emits one of them with everything derived from it, and a partial install exits
   `2` so a script can tell it from having installed nothing.
-- **Scaffold a skill and start editing immediately.** `skillsctl new my-skill`
+- **Scaffold a skill and start editing immediately.** `satchel new my-skill`
   writes `./my-skill/SKILL.md` with valid frontmatter and links it into every
   agent found in the same step — the create-and-link equivalent of
-  `skillsctl link ./my-skill` for a skill you have not written yet.
+  `satchel link ./my-skill` for a skill you have not written yet.
 - **Declare which agents a skill was written for.** `agents:` in a `SKILL.md`'s
   frontmatter is an optional YAML list (`agents: [claude, codex]`). Installing
   into an agent not in the list still links it — this is advisory, not a
   refusal — but prints a warning naming the skill and the undeclared agent.
 - **Pick skills interactively instead of naming them one at a time.**
-  `skillsctl browse` lists what is installed, with its outdated status, and
+  `satchel browse` lists what is installed, with its outdated status, and
   lets you tick several to update or remove in one batch.
-- **Catch a broken `SKILL.md` before you publish it.** `skillsctl lint <path>`
+- **Catch a broken `SKILL.md` before you publish it.** `satchel lint <path>`
   checks a skill's frontmatter the way `install` reads it, but strictly: a
   missing or empty name or description fails the check, and a name that
   would not match its directory is a warning. Point it at a directory of
@@ -168,79 +168,93 @@ in the wiki.
 ## Install
 
 ```bash
-brew install richardcase/tap/skillsctl
+brew install richardcase/tap/satchel
 ```
 
 (macOS only — the Homebrew formula publishes a cask. On Linux, use the `.deb`/`.rpm`
 packages or the tarball below.)
 
-Or grab a binary or `.deb`/`.rpm` from the [releases page](https://github.com/richardcase/skillsctl/releases),
-or build from source with `go install github.com/richardcase/skillsctl/cmd/skillsctl@latest`.
+Or grab a binary or `.deb`/`.rpm` from the [releases page](https://github.com/richardcase/satchel/releases),
+or build from source with `go install github.com/richardcase/satchel/cmd/satchel@latest`.
+
+### Upgrading from skillsctl
+
+This project was renamed from `skillsctl` to `satchel`. There is no
+`skillsctl` compatibility binary and no dual support for the old
+`SKILLSCTL_*` environment variables — install `satchel` and use it in their
+place. If you were using the default store and config locations (no
+`SKILLSCTL_HOME`/`SKILLSCTL_CONFIG` set), the first `satchel` command you run
+automatically moves `~/.local/share/skillsctl` to `~/.local/share/satchel`
+and `~/.config/skillsctl/config.toml` to `~/.config/satchel/config.toml`,
+repointing every symlink it manages along the way — nothing else to do. If
+you had `SKILLSCTL_HOME` or `SKILLSCTL_CONFIG` set, rename the variable to
+`SATCHEL_HOME`/`SATCHEL_CONFIG` yourself; `satchel` prints a one-time
+reminder if it notices the old name still set.
 
 ## Use
 
 ```bash
-skillsctl search research                          # find skills by name, description or tag
-skillsctl install conorbronsdon/avoid-ai-writing   # choose agents from a checklist
-skillsctl install owner/repo/path/to/skill         # a skill inside a monorepo
-skillsctl install owner/repo//path/to/skill        # the same, boundary spelled out
-skillsctl install owner/repo                       # pick from a list of its skills
-skillsctl install owner/repo --skill web-research  # name one (repeat for more)
-skillsctl install owner/repo --all                 # every skill in the repo
-skillsctl install owner/repo -a claude             # just one agent
-skillsctl install owner/repo --ref v1.2.0 --pin    # pin a version
-skillsctl install owner/repo --dry-run             # show what would change
-skillsctl install superpowers@claude-plugins-official  # a Claude Code plugin
-skillsctl install https://gitlab.com/group/subgroup/repo.git  # any git host, incl. GitLab subgroups
-skillsctl install oci://ghcr.io/owner/skills:v1    # from a packaged OCI artifact
-skillsctl package ./my-skills ghcr.io/owner/skills:v1  # push a directory of skills as one
-skillsctl package ./my-skills ghcr.io/owner/skills:v1 --sign-key cosign.key  # ...and sign it
-skillsctl install oci://ghcr.io/owner/skills:v1 --verify-key cosign.pub  # verify before installing
-skillsctl package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless  # sign via Sigstore's Fulcio/Rekor flow
-skillsctl install oci://ghcr.io/owner/skills:v1 \
+satchel search research                          # find skills by name, description or tag
+satchel install conorbronsdon/avoid-ai-writing   # choose agents from a checklist
+satchel install owner/repo/path/to/skill         # a skill inside a monorepo
+satchel install owner/repo//path/to/skill        # the same, boundary spelled out
+satchel install owner/repo                       # pick from a list of its skills
+satchel install owner/repo --skill web-research  # name one (repeat for more)
+satchel install owner/repo --all                 # every skill in the repo
+satchel install owner/repo -a claude             # just one agent
+satchel install owner/repo --ref v1.2.0 --pin    # pin a version
+satchel install owner/repo --dry-run             # show what would change
+satchel install superpowers@claude-plugins-official  # a Claude Code plugin
+satchel install https://gitlab.com/group/subgroup/repo.git  # any git host, incl. GitLab subgroups
+satchel install oci://ghcr.io/owner/skills:v1    # from a packaged OCI artifact
+satchel package ./my-skills ghcr.io/owner/skills:v1  # push a directory of skills as one
+satchel package ./my-skills ghcr.io/owner/skills:v1 --sign-key cosign.key  # ...and sign it
+satchel install oci://ghcr.io/owner/skills:v1 --verify-key cosign.pub  # verify before installing
+satchel package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless  # sign via Sigstore's Fulcio/Rekor flow
+satchel install oci://ghcr.io/owner/skills:v1 \
   --verify-identity signer@example.com --verify-issuer https://accounts.google.com  # verify a keyless signature
-skillsctl link ./my-skill                          # a skill you are writing
-skillsctl install ./my-skill                       # the same thing
-skillsctl new my-skill                             # scaffold a skill and link it, in one step
-skillsctl lint ./my-skill                          # check its SKILL.md before publishing
-skillsctl lint ./my-skills-repo                    # check every skill under a directory
-skillsctl link avoid-ai-writing -a gemini          # into an agent that missed it
-skillsctl browse                                   # pick installed skills to update or remove
-skillsctl list                                     # what's installed
-skillsctl list --json                              # the raw receipts
-skillsctl list --include-channel git               # only skills fetched via git
-skillsctl list --exclude-channel local             # everything except skills you are editing
-skillsctl info brainstorming                       # one skill's receipt in full
-skillsctl info brainstorming --json                # the same, for a script
-skillsctl outdated                                 # what has moved upstream
-skillsctl diff avoid-ai-writing                    # what `update` would change
-skillsctl diff avoid-ai-writing --against previous # what `rollback` would undo
-skillsctl update                                   # move everything to its ref's head
-skillsctl update avoid-ai-writing                  # just this one, pin or not
-skillsctl update --dry-run                         # show what would change
-skillsctl pin brainstorming                        # freeze it where it is
-skillsctl unpin brainstorming                      # let it follow its ref again
-skillsctl unpin brainstorming --ref develop        # ...this ref, from now on
-skillsctl remove avoid-ai-writing                  # unlink everywhere
-skillsctl rollback avoid-ai-writing                # swap back to before the last update
-skillsctl rollback avoid-ai-writing                # run it again to toggle back
-skillsctl rollback avoid-ai-writing --force        # ...even if you edited it in place
-skillsctl adopt --dry-run                          # what is already in your agents
-skillsctl adopt                                    # take it over
-skillsctl gc                                       # reclaim disk nothing uses
-skillsctl gc --dry-run                             # show what it would free
-skillsctl bundle > skills.toml                     # write what's installed as a manifest
-skillsctl bundle --tag frontend > frontend.toml    # ...just the skills tagged frontend
-skillsctl sync skills.toml                         # install what it names, and report the rest
-skillsctl sync skills.toml --dry-run               # show what would change
-skillsctl sync team/skills-profile                 # sync from a git-hosted skills.toml
-skillsctl sync team/skills-profile --ref develop   # ...at a specific branch
-skillsctl list --tag frontend                      # only skills tagged frontend
-skillsctl version
+satchel link ./my-skill                          # a skill you are writing
+satchel install ./my-skill                       # the same thing
+satchel new my-skill                             # scaffold a skill and link it, in one step
+satchel lint ./my-skill                          # check its SKILL.md before publishing
+satchel lint ./my-skills-repo                    # check every skill under a directory
+satchel link avoid-ai-writing -a gemini          # into an agent that missed it
+satchel browse                                   # pick installed skills to update or remove
+satchel list                                     # what's installed
+satchel list --json                              # the raw receipts
+satchel list --include-channel git               # only skills fetched via git
+satchel list --exclude-channel local             # everything except skills you are editing
+satchel info brainstorming                       # one skill's receipt in full
+satchel info brainstorming --json                # the same, for a script
+satchel outdated                                 # what has moved upstream
+satchel diff avoid-ai-writing                    # what `update` would change
+satchel diff avoid-ai-writing --against previous # what `rollback` would undo
+satchel update                                   # move everything to its ref's head
+satchel update avoid-ai-writing                  # just this one, pin or not
+satchel update --dry-run                         # show what would change
+satchel pin brainstorming                        # freeze it where it is
+satchel unpin brainstorming                      # let it follow its ref again
+satchel unpin brainstorming --ref develop        # ...this ref, from now on
+satchel remove avoid-ai-writing                  # unlink everywhere
+satchel rollback avoid-ai-writing                # swap back to before the last update
+satchel rollback avoid-ai-writing                # run it again to toggle back
+satchel rollback avoid-ai-writing --force        # ...even if you edited it in place
+satchel adopt --dry-run                          # what is already in your agents
+satchel adopt                                    # take it over
+satchel gc                                       # reclaim disk nothing uses
+satchel gc --dry-run                             # show what it would free
+satchel bundle > skills.toml                     # write what's installed as a manifest
+satchel bundle --tag frontend > frontend.toml    # ...just the skills tagged frontend
+satchel sync skills.toml                         # install what it names, and report the rest
+satchel sync skills.toml --dry-run               # show what would change
+satchel sync team/skills-profile                 # sync from a git-hosted skills.toml
+satchel sync team/skills-profile --ref develop   # ...at a specific branch
+satchel list --tag frontend                      # only skills tagged frontend
+satchel version
 ```
 
 ```
-$ skillsctl list
+$ satchel list
 NAME              CHANNEL  VERSION           AGENTS        TAGS
 avoid-ai-writing  git      a1b2c3d           claude,codex  frontend
 brainstorming     git      9f8e7d6 (pinned)  claude
@@ -252,7 +266,7 @@ my-skill          local    -                 claude
 printing a source for each hit that can be passed straight to `install`:
 
 ```
-$ skillsctl search research
+$ satchel search research
 NAME          SOURCE                                 DESCRIPTION
 web-research  vercel-labs/agent-skills/web-research  Research a topic against primary sources
 ```
@@ -260,7 +274,7 @@ web-research  vercel-labs/agent-skills/web-research  Research a topic against pr
 No match is not an error — it just says so:
 
 ```
-$ skillsctl search nonexistent
+$ satchel search nonexistent
 No skills found matching "nonexistent".
 ```
 
@@ -270,7 +284,7 @@ has been deleted, broken or re-pointed is named as such — nothing is fetched a
 nothing is repaired:
 
 ```
-$ skillsctl info brainstorming
+$ satchel info brainstorming
 brainstorming
 Explores user intent, requirements and design before implementation.
 
@@ -279,8 +293,8 @@ source     https://github.com/obra/superpowers.git
 subpath    skills/brainstorming
 ref        the repository's default branch
 revision   b36e0829c6d0140e93cfef2ca599b1b07d4a7797
-files      ~/.local/share/skillsctl/rev/github.com/obra/superpowers/b36e082…/skills/brainstorming
-           (skillsctl's store)
+files      ~/.local/share/satchel/rev/github.com/obra/superpowers/b36e082…/skills/brainstorming
+           (satchel's store)
 installed  2026-08-15 08:50:14 UTC
 updated    2026-08-15 08:50:14 UTC
 
@@ -292,13 +306,13 @@ links
 A name that is not installed is an error naming the closest ones that are:
 
 ```
-$ skillsctl info brainstorm
+$ satchel info brainstorm
 error: "brainstorm" is not installed; did you mean brainstorming?
 ```
 
 A source can be `owner/repo`, `owner/repo/path/to/skill`, any git URL
 (https, ssh or scp-style), a local path, or `oci://registry/repository:tag` for
-a skill packaged with `skillsctl package`. `//` separates a repository or an
+a skill packaged with `satchel package`. `//` separates a repository or an
 artifact from a subpath inside it — the only way to name one in a
 `.git`-suffixed or `git@host:` URL, where the repository boundary is otherwise
 the whole path, and in an `oci://` reference, where the tag ends it:
@@ -306,7 +320,7 @@ the whole path, and in an `oci://` reference, where the tag ends it:
 
 The `owner/repo` shorthand is GitHub-specific, but any other git host — GitLab,
 Bitbucket, a self-hosted server — works with its full URL, `.git` suffix
-included: `skillsctl install https://gitlab.com/group/subgroup/repo.git`. The
+included: `satchel install https://gitlab.com/group/subgroup/repo.git`. The
 suffix matters more on GitLab than GitHub, since GitLab projects can nest
 inside subgroups (`group/subgroup/repo`), and without an explicit `.git`
 boundary that path is indistinguishable from `owner/repo/path/to/skill`. Add
@@ -318,7 +332,7 @@ them, `install` asks rather than guessing — at a terminal, that is a list to
 pick from:
 
 ```
-$ skillsctl install vercel-labs/agent-skills
+$ satchel install vercel-labs/agent-skills
 skills in https://github.com/vercel-labs/agent-skills.git @ 7c41bf0:
 
   ❯ ◉ pdf-forms     Extract and fill PDF forms
@@ -338,7 +352,7 @@ of one flat list. Space on a heading ticks or clears every skill under it in
 one keystroke; a skill can still be ticked on its own:
 
 ```
-$ skillsctl install mattpocock/skills
+$ satchel install mattpocock/skills
 skills in https://github.com/mattpocock/skills.git @ 9a2f5c1:
 
   ❯ ◉ content
@@ -356,7 +370,7 @@ so an unattended run can never install something nobody chose. Grouping
 carries over to this plain form too:
 
 ```
-$ skillsctl install vercel-labs/agent-skills < /dev/null
+$ satchel install vercel-labs/agent-skills < /dev/null
 skills in https://github.com/vercel-labs/agent-skills.git @ 7c41bf0:
   pdf-forms     Extract and fill PDF forms
   web-research  Research a topic against primary sources
@@ -371,7 +385,7 @@ plugin they belong to, however deep they are nested, and a plugin's own
 `SKILL.md` has none:
 
 ```
-$ skillsctl install humanlayer/skills < /dev/null
+$ satchel install humanlayer/skills < /dev/null
 skills in https://github.com/humanlayer/skills.git @ 52a638e:
   show-me:
     show-me    Explain visually
@@ -379,7 +393,7 @@ skills in https://github.com/humanlayer/skills.git @ 52a638e:
     improve-claude-md  Improve CLAUDE.md files
 error: this repository holds 2 skills: pass --skill <name> (repeatable) or --all
 
-$ skillsctl install humanlayer/skills --skill show-me
+$ satchel install humanlayer/skills --skill show-me
 installed show-me @ 52a638e into claude
 ```
 
@@ -389,7 +403,7 @@ installed show-me @ 52a638e into claude
 fetched. It exits `3` when an update is available, so it works as a CI check:
 
 ```
-$ skillsctl outdated
+$ satchel outdated
 NAME              CHANNEL  REF   CURRENT  LATEST   STATUS
 avoid-ai-writing  git      HEAD  3c0fd8a  3c0fd8a  current
 brainstorming     git      main  525e31b  9071811  outdated
@@ -405,7 +419,7 @@ update would bring in before you take it. It is scoped to the installed skill:
 in a repository of many, only that skill's own subdirectory is compared.
 
 ```
-$ skillsctl diff brainstorming
+$ satchel diff brainstorming
 diff --git a/SKILL.md b/SKILL.md
 index 525e31b..9071811 100644
 --- a/SKILL.md
@@ -414,7 +428,7 @@ index 525e31b..9071811 100644
  Ask what problem is being solved.
 +Ask who else has to live with the answer.
 
-$ skillsctl diff brainstorming --against previous
+$ satchel diff brainstorming --against previous
 no changes
 ```
 
@@ -429,18 +443,18 @@ no network at all. Either way, identical revisions print `no changes`.
 keeping the name, the agents and the pin:
 
 ```
-$ skillsctl update
+$ satchel update
 updated avoid-ai-writing 3c0fd8a -> 9071811
 skipped brainstorming: edited since it was installed; pass --force to update it anyway
 skipped pinned-one: pinned at 525e31b; name it explicitly to update it
-1 revision (4.1 MB) now unreferenced; run `skillsctl gc` to reclaim
+1 revision (4.1 MB) now unreferenced; run `satchel gc` to reclaim
 ```
 
 Naming a skill updates it even when it is pinned, re-pinning it at the new
 commit. Revision directories carry no `.git`, so a skill edited through its
 symlink is spotted by re-hashing it against what was recorded at install time,
 and skipped rather than overwritten — `--force` updates it anyway, discarding
-the edit. The old revision stays on disk until `skillsctl gc`, so a failed
+the edit. The old revision stays on disk until `satchel gc`, so a failed
 update leaves the previous one linked and the receipt untouched.
 
 `rollback` undoes an update: the receipt remembers the revision it was on before
@@ -449,10 +463,10 @@ the pin. It is a toggle — running it again returns to the revision the first
 rollback moved away from:
 
 ```
-$ skillsctl rollback avoid-ai-writing
+$ satchel rollback avoid-ai-writing
 rolled back avoid-ai-writing to 3c0fd8a
 
-$ skillsctl rollback avoid-ai-writing
+$ satchel rollback avoid-ai-writing
 rolled back avoid-ai-writing to 9071811
 ```
 
@@ -461,17 +475,17 @@ skill edited through its symlink is skipped rather than silently reverted — th
 same check `update` makes, with the same escape hatch:
 
 ```
-$ skillsctl rollback my-notes
+$ satchel rollback my-notes
 skipped my-notes: nothing to roll back to: install or update this skill first
 
-$ skillsctl rollback brainstorming
+$ satchel rollback brainstorming
 skipped brainstorming: edited since it was installed: pass --force to roll it back anyway
 
-$ skillsctl rollback brainstorming --force
+$ satchel rollback brainstorming --force
 rolled back brainstorming to 525e31b
 ```
 
-`skillsctl diff <name> --against previous` shows what a rollback would undo
+`satchel diff <name> --against previous` shows what a rollback would undo
 before you run it, and `--dry-run` prints the `relink` and `record` ops it would
 apply. Only skills fetched from git or from an OCI registry have a revision
 history to swap back to; a local skill or a plugin is refused by name.
@@ -480,10 +494,10 @@ A pin can be added and removed after the fact, so changing your mind costs one
 command rather than a remove and a reinstall:
 
 ```
-$ skillsctl pin brainstorming
+$ satchel pin brainstorming
 pinned brainstorming at 9f8e7d6 (it no longer tracks main)
 
-$ skillsctl unpin brainstorming
+$ satchel unpin brainstorming
 unpinned brainstorming; it now tracks the repository's default branch
 ```
 
@@ -497,11 +511,11 @@ directory right now, and a plugin is at whichever version Claude installed.
 
 ## How it works
 
-Skills are fetched once into `~/.local/share/skillsctl` and symlinked into each
+Skills are fetched once into `~/.local/share/satchel` and symlinked into each
 agent's skills directory, so one copy serves every configured agent.
 
 ```
-~/.local/share/skillsctl/
+~/.local/share/satchel/
   cache/<slug>.git      bare git mirror, reused across installs and refs
   rev/<slug>/<sha>/     the extracted tree at one commit
   state.json            receipts
@@ -517,7 +531,7 @@ A local skill is recorded but never copied: the receipt holds the directory you
 gave and the symlinks point straight at it, so edits are live and there is
 nothing in the store. It has no revision, no content hash and nothing to update
 from — `list` shows a `-` for its version and `update` says so. Removing it
-takes away skillsctl's own symlinks and leaves your directory exactly as it was.
+takes away satchel's own symlinks and leaves your directory exactly as it was.
 A directory inside the store, or already inside an agent's skills directory, is
 refused rather than linked.
 
@@ -535,12 +549,12 @@ anything without a `SKILL.md` — it says what it found and why.
 
 A hand-made link into a second agent, for a skill that is already managed, is
 added to the receipt that manages it — the same amendment
-`skillsctl link <name> -a <agent>` makes, found after the fact. It has to point
+`satchel link <name> -a <agent>` makes, found after the fact. It has to point
 where that receipt already says its files are, since a receipt is what `update`
 re-points and `remove` deletes; one that leads somewhere else is reported
 instead.
 
-A plugin is the second exception, because Claude Code owns it. `skillsctl` records
+A plugin is the second exception, because Claude Code owns it. `satchel` records
 the `plugin@marketplace` id, the version and the install path claude reported;
 there is no revision in the store and no content hash, since the files are the
 agent's. What it adds is the fan-out: every skill under the plugin's `skills/`
@@ -557,15 +571,15 @@ Locations can be overridden with environment variables:
 
 | Variable | Overrides | Falls back to |
 | --- | --- | --- |
-| `SKILLSCTL_HOME` | the store | `$XDG_DATA_HOME/skillsctl`, then `~/.local/share/skillsctl` |
-| `SKILLSCTL_CONFIG` | the config file | `$XDG_CONFIG_HOME/skillsctl/config.toml`, then `~/.config/skillsctl/config.toml` |
-| `SKILLSCTL_REGISTRY_URL` | where `search` fetches the registry from | the config file's `[registry]` table, then the built-in default |
+| `SATCHEL_HOME` | the store | `$XDG_DATA_HOME/satchel`, then `~/.local/share/satchel` |
+| `SATCHEL_CONFIG` | the config file | `$XDG_CONFIG_HOME/satchel/config.toml`, then `~/.config/satchel/config.toml` |
+| `SATCHEL_REGISTRY_URL` | where `search` fetches the registry from | the config file's `[registry]` table, then the built-in default |
 
 ### Signing and verification
 
 `package`/`install` support two independent, mutually exclusive ways to sign
 and verify an OCI artifact, both by shelling out to `cosign` — install it
-separately and have it on `PATH`, or `skillsctl` reports as much and names
+separately and have it on `PATH`, or `satchel` reports as much and names
 the offline flags instead. Neither is the default; pick whichever fits how
 the image was built.
 
@@ -581,8 +595,8 @@ cosign generate-key-pair
 then:
 
 ```bash
-skillsctl package ./my-skills ghcr.io/owner/skills:v1 --sign-key cosign.key
-skillsctl install oci://ghcr.io/owner/skills:v1 --verify-key cosign.pub
+satchel package ./my-skills ghcr.io/owner/skills:v1 --sign-key cosign.key
+satchel install oci://ghcr.io/owner/skills:v1 --verify-key cosign.pub
 ```
 
 Signing runs `cosign sign --key <path> --yes <ref>`; cosign reads the key's
@@ -597,8 +611,8 @@ rotate — the signer's identity is the workflow itself, backed by Sigstore's
 Fulcio (short-lived certificate issuance) and Rekor (transparency log):
 
 ```bash
-skillsctl package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless
-skillsctl install oci://ghcr.io/owner/skills:v1 \
+satchel package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless
+satchel install oci://ghcr.io/owner/skills:v1 \
   --verify-identity signer@example.com --verify-issuer https://accounts.google.com
 ```
 
@@ -628,13 +642,13 @@ permissions:
   contents: read
 steps:
   - uses: sigstore/cosign-installer@v3
-  - run: skillsctl package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless
+  - run: satchel package ./my-skills ghcr.io/owner/skills:v1 --sign-keyless
 ```
 
 Verify against the workflow's own identity:
 
 ```bash
-skillsctl install oci://ghcr.io/owner/skills:v1 \
+satchel install oci://ghcr.io/owner/skills:v1 \
   --verify-identity https://github.com/owner/repo/.github/workflows/release.yml@refs/heads/main \
   --verify-issuer https://token.actions.githubusercontent.com
 ```
@@ -649,7 +663,7 @@ sign:
     SIGSTORE_ID_TOKEN:
       aud: sigstore
   script:
-    - skillsctl package ./my-skills registry.example.com/owner/skills:v1 --sign-keyless
+    - satchel package ./my-skills registry.example.com/owner/skills:v1 --sign-keyless
 ```
 
 GitLab's certificate identity is the pipeline's URL rather than an email —
@@ -657,7 +671,7 @@ note the required double slash before the CI config path, and that the
 issuer is the GitLab instance itself:
 
 ```bash
-skillsctl install oci://registry.example.com/owner/skills:v1 \
+satchel install oci://registry.example.com/owner/skills:v1 \
   --verify-identity "https://gitlab.com/owner/skills//.gitlab-ci.yml@refs/heads/main" \
   --verify-issuer https://gitlab.com
 ```
@@ -708,7 +722,7 @@ skills had. Naming only an agent that holds links — `remove superpowers -a cod
 Naming the agent that owns it is refused if that would strand a linked agent's
 skills — one holding links that was not also named in the same command; naming
 both together takes both away in one command rather than being refused. The
-error names `skillsctl remove <name>`, which does mean everywhere.
+error names `satchel remove <name>`, which does mean everywhere.
 
 `link <name> -a <agent>` is its inverse, for the agent that was not on the
 machine when something was installed: it adds a link to the revision the receipt
@@ -728,8 +742,8 @@ it can see those skills without a symlink.
 installed whole, at whichever version its marketplace publishes — and are
 refused rather than ignored. `outdated` cannot ask the marketplace whether a
 newer version exists, so instead it compares the receipt against what claude
-has installed now: a plugin claude has moved since skillsctl last looked comes
-back `stale`, which `skillsctl update` repairs.
+has installed now: a plugin claude has moved since satchel last looked comes
+back `stale`, which `satchel update` repairs.
 
 Nothing in the store is deleted until you ask. `remove` unlinks a skill and
 forgets its receipt, and `update` moves it off the revision it was on, but both
@@ -739,7 +753,7 @@ reclaims what no receipt references: the revision, and the bare mirror once no
 revision of that repository is left.
 
 ```
-$ skillsctl gc --dry-run
+$ satchel gc --dry-run
 rev/github.com/obra/superpowers/9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c  4.1 MB
 cache/github.com/obra/superpowers.git                                     2.7 MB
 would reclaim 1 revision and 1 mirror, 6.8 MB
@@ -759,23 +773,23 @@ verifying packages both depend on it, and the warning names where to install
 it.
 
 ```
-$ skillsctl doctor
+$ satchel doctor
 missing links
   tdd  codex  ~/.codex/skills/tdd is recorded but not on disk
-  fix: skillsctl remove tdd -a codex, then skillsctl link tdd -a codex
+  fix: satchel remove tdd -a codex, then satchel link tdd -a codex
 
 dangling links
-  brainstorming  claude  points at ~/.local/share/skillsctl/rev/…/9f8e7d6c, which is gone
-  brainstorming  codex   points at ~/.local/share/skillsctl/rev/…/9f8e7d6c, which is gone
-  fix: skillsctl remove brainstorming, then skillsctl install obra/superpowers
+  brainstorming  claude  points at ~/.local/share/satchel/rev/…/9f8e7d6c, which is gone
+  brainstorming  codex   points at ~/.local/share/satchel/rev/…/9f8e7d6c, which is gone
+  fix: satchel remove brainstorming, then satchel install obra/superpowers
 
 orphan revisions
   rev/github.com/obra/superpowers/9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c  4.1 MB
-  fix: skillsctl gc
+  fix: satchel gc
 note: 4 problems in 2 skills
 ```
 
-The repairs are deliberately not `skillsctl update`: update moves a skill to the
+The repairs are deliberately not `satchel update`: update moves a skill to the
 head of the ref it tracks and stops at *current* when the ref has not moved,
 which is the usual state of a skill whose link somebody deleted. Putting a link
 back is `remove -a` followed by `link -a`, and replacing store content is a
@@ -794,27 +808,27 @@ not be read. The codes above `2` are findings rather
 than a verdict on the work:
 `3` means `outdated` ran to completion and something has moved, and `4` that
 `doctor` ran to completion and something is wrong. A stale plugin does not set
-`3`: it is not an available update, and `skillsctl update` repairs it on its own.
+`3`: it is not an available update, and `satchel update` repairs it on its own.
 
 ## Shell completion
 
-`skillsctl` generates a completion script for bash, zsh, fish and PowerShell —
-this comes from Cobra, the CLI framework skillsctl is built on, so it needs no
+`satchel` generates a completion script for bash, zsh, fish and PowerShell —
+this comes from Cobra, the CLI framework satchel is built on, so it needs no
 setup beyond sourcing it:
 
 ```bash
 # zsh
-echo 'source <(skillsctl completion zsh)' >> ~/.zshrc
+echo 'source <(satchel completion zsh)' >> ~/.zshrc
 # bash
-echo 'source <(skillsctl completion bash)' >> ~/.bashrc
+echo 'source <(satchel completion bash)' >> ~/.bashrc
 ```
 
-`skillsctl completion --help` lists every shell and the exact setup for each.
+`satchel completion --help` lists every shell and the exact setup for each.
 
 ## Configuration
 
-Agents are configured in `~/.config/skillsctl/config.toml`. Without one,
-skillsctl uses the built-in defaults below, and installs into whichever of
+Agents are configured in `~/.config/satchel/config.toml`. Without one,
+satchel uses the built-in defaults below, and installs into whichever of
 them exist.
 
 ```toml
@@ -867,23 +881,23 @@ agent. `-a` still bypasses it outright. Piped or scripted use (no terminal
 attached) is unchanged: it falls back to every present agent, exactly as
 before.
 
-`skillsctl search` fetches its registry from GitHub, configurable via a
+`satchel search` fetches its registry from GitHub, configurable via a
 `[registry]` table:
 
 ```toml
 [registry]
-url = "https://raw.githubusercontent.com/richardcase/skillsctl/main/registry/skills.json"
+url = "https://raw.githubusercontent.com/richardcase/satchel/main/registry/skills.json"
 ```
 
-`SKILLSCTL_REGISTRY_URL` overrides both the config file and the built-in
+`SATCHEL_REGISTRY_URL` overrides both the config file and the built-in
 default, mainly for testing against a self-hosted mirror. A successful fetch
 is cached at `<store root>/registry-cache.json`, used when the network or
 GitHub is unavailable.
 
 ## skills.toml
 
-`skillsctl bundle` writes the skills you have installed as a manifest, and
-`skillsctl sync` installs one. It is meant to be read and edited by hand, and
+`satchel bundle` writes the skills you have installed as a manifest, and
+`satchel sync` installs one. It is meant to be read and edited by hand, and
 committed.
 
 ```toml
@@ -918,11 +932,11 @@ tags = ['frontend']
   a hand-written entry that omits `subpath` for a skill that lives at one
   reports a difference rather than syncing — install once and `bundle` to get
   the subpath right, rather than guessing at it by hand.
-- `local` skills — a directory you linked with `skillsctl link ./path` — are
+- `local` skills — a directory you linked with `satchel link ./path` — are
   left out of a bundle and named on stderr, because an absolute path on one
   machine means nothing on another.
 - `tags` groups skills for `list --tag`/`bundle --tag` to filter by. A tag is
-  any string; skillsctl imposes no vocabulary. Tags are set from the manifest
+  any string; satchel imposes no vocabulary. Tags are set from the manifest
   only when `sync` installs a skill for the first time — like `agents`, they
   are metadata rather than identity, so re-syncing a manifest with different
   tags for an already-installed skill changes nothing.
@@ -930,7 +944,7 @@ tags = ['frontend']
 `sync` only ever adds:
 
 ```
-$ skillsctl sync skills.toml
+$ satchel sync skills.toml
 installed alpha @ a1b2c3d into claude, codex, gemini
 linked beta into claude
 gamma differs: the manifest tracks develop, the install tracks main; remove it and run sync again, or bring the manifest in line
@@ -951,8 +965,8 @@ accepts minus plugin and OCI, which name no file to read. `skills.toml` is
 always read from that repository's root:
 
 ```
-$ skillsctl sync team/skills-profile
-$ skillsctl sync git@github.com:team/skills-profile.git --ref develop
+$ satchel sync team/skills-profile
+$ satchel sync git@github.com:team/skills-profile.git --ref develop
 ```
 
 `--ref` chooses the profile repository's branch, tag or sha (default: its
@@ -969,10 +983,10 @@ both of its forms. `bundle` and `sync` are also implemented, and `doctor`
 reports without a `--fix`.
 
 One thing the plugin channel deliberately does not do yet: `outdated` reports a
-plugin as `stale` when claude has moved it since skillsctl last looked, but it
+plugin as `stale` when claude has moved it since satchel last looked, but it
 cannot tell you whether the marketplace has published a newer version.
 
-See [the design spec](docs/superpowers/specs/2026-08-13-skillsctl-design.md) for
+See [the design spec](docs/superpowers/specs/2026-08-13-satchel-design.md) for
 the full intended surface.
 
 ## Development
@@ -1006,7 +1020,7 @@ covers getting set up and the pull request process.
 
 ## Acknowledgements
 
-Some of skillsctl's functionality is inspired by the great
+Some of satchel's functionality is inspired by the great
 [`npx skills`](https://github.com/vercel-labs/skills) from Vercel, and by
 [Homebrew](https://brew.sh), whose install/update/remove model with a
-receipt for every package is the one skillsctl brings to agent skills.
+receipt for every package is the one satchel brings to agent skills.

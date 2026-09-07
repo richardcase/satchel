@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 	"github.com/spf13/cobra"
 )
 
@@ -303,7 +303,7 @@ func resolveAmbiguity(
 // that are not already installed, so neither the picker nor the plain listing
 // shown to a non-interactive caller offers a choice that could only fail: a
 // receipt already claims the name, or a target's skills directory already has
-// something at it (a foreign symlink adopt would classify, not skillsctl's
+// something at it (a foreign symlink adopt would classify, not satchel's
 // own).
 func availableToInstall(db *state.DB, targets []target.Target, cands []channel.Candidate) []channel.Candidate {
 	var out []channel.Candidate
@@ -359,11 +359,11 @@ func dropInstalled(db *state.DB, targets []target.Target, chosen []channel.Candi
 			continue
 		}
 		// No receipt claims the name, but a target's skills directory already
-		// has something at it — a symlink something other than skillsctl put
+		// has something at it — a symlink something other than satchel put
 		// there, which Link would refuse to overwrite.
 		if agents := occupiedAgents(targets, s.Name); len(agents) > 0 {
 			if len(chosen) == 1 {
-				return nil, nil, fmt.Errorf("%q already exists in %s: run `skillsctl adopt` to take it over, or remove it first",
+				return nil, nil, fmt.Errorf("%q already exists in %s: run `satchel adopt` to take it over, or remove it first",
 					s.Name, strings.Join(agents, ", "))
 			}
 			skipped = append(skipped, fmt.Sprintf("skipped %s: already exists in %s", s.Name, strings.Join(agents, ", ")))

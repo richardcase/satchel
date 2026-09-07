@@ -187,7 +187,7 @@ func (s *Store) prune(dir string, live []string, bound func(name string) bool) (
 	var out []Reclaimable
 	for _, e := range entries {
 		// Anything that is not a directory — a stray file, a symlink — was
-		// not put here by skillsctl. Leave it alone.
+		// not put here by satchel. Leave it alone.
 		if !e.IsDir() {
 			continue
 		}

@@ -1,4 +1,4 @@
-// Package registry fetches the curated list of skills `skillsctl search`
+// Package registry fetches the curated list of skills `satchel search`
 // matches against, from a JSON file this repository publishes, with a local
 // cache so search still works when the network or GitHub is unavailable.
 package registry
@@ -16,7 +16,7 @@ import (
 
 // DefaultURL is where the registry file is fetched from when no override is
 // configured.
-const DefaultURL = "https://raw.githubusercontent.com/richardcase/skillsctl/main/registry/skills.json"
+const DefaultURL = "https://raw.githubusercontent.com/richardcase/satchel/main/registry/skills.json"
 
 // DefaultTTL is how long a successful fetch is trusted before Fetch tries the
 // network again.

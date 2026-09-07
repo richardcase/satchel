@@ -1,4 +1,4 @@
-module github.com/richardcase/skillsctl
+module github.com/richardcase/satchel
 
 go 1.25.0
 

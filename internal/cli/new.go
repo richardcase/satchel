@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/target"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ func newNewCmd() *cobra.Command {
 		Use:   "new <name>",
 		Short: "Scaffold a skill you are about to write, and link it in place",
 		Long: "Create ./<name>/SKILL.md with the frontmatter a skill needs, then link it\n" +
-			"into every agent found — the same thing `skillsctl link ./<name>` does to a\n" +
+			"into every agent found — the same thing `satchel link ./<name>` does to a\n" +
 			"directory you had already written by hand.\n\n" +
 			"Refuses to overwrite a directory that already exists.",
 		Args: cobra.ExactArgs(1),
@@ -65,7 +65,7 @@ func runNew(cmd *cobra.Command, name, description string, o installOpts) error {
 		return fmt.Errorf("refusing to scaffold: %w", err)
 	}
 	if _, err := os.Stat(name); err == nil {
-		return fmt.Errorf("%s already exists: choose a different name, or run `skillsctl link ./%s` on it directly", name, name)
+		return fmt.Errorf("%s already exists: choose a different name, or run `satchel link ./%s` on it directly", name, name)
 	} else if !os.IsNotExist(err) {
 		return fmt.Errorf("stat %s: %w", name, err)
 	}
@@ -89,7 +89,7 @@ func runNew(cmd *cobra.Command, name, description string, o installOpts) error {
 		if _, err := e.targets(o.agents); err != nil {
 			return err
 		}
-		p.Add(plan.Note{Text: fmt.Sprintf("run: skillsctl link ./%s%s", name, agentSuffix(o.agents))})
+		p.Add(plan.Note{Text: fmt.Sprintf("run: satchel link ./%s%s", name, agentSuffix(o.agents))})
 		for _, line := range p.Describe() {
 			cmd.Println(line)
 		}
@@ -99,7 +99,7 @@ func runNew(cmd *cobra.Command, name, description string, o installOpts) error {
 	ex := &plan.Executor{Out: cmd.OutOrStdout()}
 	if err := ex.Apply(cmd.Context(), p); err != nil {
 		if errors.Is(err, os.ErrExist) {
-			return fmt.Errorf("%s already exists: choose a different name, or run `skillsctl link ./%s` on it directly", name, name)
+			return fmt.Errorf("%s already exists: choose a different name, or run `satchel link ./%s` on it directly", name, name)
 		}
 		return err
 	}

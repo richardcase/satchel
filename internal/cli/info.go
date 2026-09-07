@@ -7,10 +7,10 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 	"github.com/spf13/cobra"
 )
 
@@ -266,9 +266,9 @@ func owner(rep infoReport) string {
 	case channel.StoreOwned:
 		if !rep.inStore {
 			// What adopt records for a skill it found in a git working copy.
-			return "(a working copy of your own, not skillsctl's store)"
+			return "(a working copy of your own, not satchel's store)"
 		}
-		return "(skillsctl's store)"
+		return "(satchel's store)"
 	case channel.AgentOwned:
 		return "(installed by the agent, which owns it)"
 	default:

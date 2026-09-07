@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/outdated"
+	"github.com/richardcase/satchel/internal/outdated"
 )
 
 // git's stderr is several lines ("fatal: …", "Please make sure …"), and a

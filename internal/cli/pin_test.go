@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // The whole point of the pair: a pin added after the fact is honoured by

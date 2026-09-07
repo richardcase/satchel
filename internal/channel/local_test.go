@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 const localSkillMD = "---\nname: my-skill\ndescription: A skill under development\n---\n\nBody.\n"
@@ -151,7 +151,7 @@ func TestLocalResolvesRelativeAndTildePathsToSomethingStable(t *testing.T) {
 	}
 }
 
-// `skillsctl install .` inside a skill directory should name the skill after
+// `satchel install .` inside a skill directory should name the skill after
 // that directory, not call it ".".
 func TestLocalNamesADotPathAfterItsDirectory(t *testing.T) {
 	f := newLocalFixture(t, map[string]string{"SKILL.md": "# No frontmatter\n"})

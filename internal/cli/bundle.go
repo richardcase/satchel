@@ -3,7 +3,7 @@ package cli
 import (
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/manifest"
+	"github.com/richardcase/satchel/internal/manifest"
 	"github.com/spf13/cobra"
 )
 
@@ -14,8 +14,8 @@ func newBundleCmd() *cobra.Command {
 		Use:   "bundle",
 		Short: "Write the installed skills as a portable skills.toml",
 		Long: "Project the current receipts into the skills.toml manifest format and write it\n" +
-			"to stdout, so that `skillsctl bundle > skills.toml` on one machine and\n" +
-			"`skillsctl sync skills.toml` on another install the same set.\n\n" +
+			"to stdout, so that `satchel bundle > skills.toml` on one machine and\n" +
+			"`satchel sync skills.toml` on another install the same set.\n\n" +
 			"--tag keeps only receipts carrying at least one of the given tags, for\n" +
 			"writing a scoped manifest out of a larger set.\n\n" +
 			"A local skill is left out and named on stderr: its source is a path on this\n" +

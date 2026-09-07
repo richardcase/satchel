@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // installed sets up a repository holding one skill, installs it, and returns
@@ -91,7 +91,7 @@ func TestUpdateRepointsEveryAgentAndOrphansTheOldRevision(t *testing.T) {
 	}
 
 	// The old revision is now unreferenced, and gc is what reclaims it.
-	if !strings.Contains(out, "run `skillsctl gc` to reclaim") {
+	if !strings.Contains(out, "run `satchel gc` to reclaim") {
 		t.Errorf("update did not mention the orphaned revision:\n%s", out)
 	}
 	oldRev := filepath.Join(h.root, "rev")

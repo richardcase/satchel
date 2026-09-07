@@ -11,7 +11,7 @@ import (
 // name can come from a repository's SKILL.md, which is third-party data, and it
 // is joined onto an agent's skills directory to build a symlink path — so a name
 // containing a separator or a dot segment would let a published repository decide
-// where skillsctl creates directories and symlinks.
+// where satchel creates directories and symlinks.
 func ValidateSkillName(name string) error {
 	switch {
 	case name == "":
@@ -63,9 +63,9 @@ func Link(linkPath, revPath string) (created bool, err error) {
 		// A symlink somebody made by hand is exactly what adopt takes over, so
 		// name it rather than only the blunt remedy. A real directory is not:
 		// there would be no link to record, so the message below stays as it is.
-		return false, fmt.Errorf("%s is already a symlink to %s: run `skillsctl adopt` to take it over, or remove it first", linkPath, existing)
+		return false, fmt.Errorf("%s is already a symlink to %s: run `satchel adopt` to take it over, or remove it first", linkPath, existing)
 	case err == nil:
-		return false, fmt.Errorf("%s already exists and is not a skillsctl symlink: remove it first", linkPath)
+		return false, fmt.Errorf("%s already exists and is not a satchel symlink: remove it first", linkPath)
 	case !os.IsNotExist(err):
 		return false, fmt.Errorf("inspect %s: %w", linkPath, err)
 	}
@@ -100,7 +100,7 @@ func Relink(linkPath, revPath string) (previous string, err error) {
 	case err != nil:
 		return "", fmt.Errorf("inspect %s: %w", linkPath, err)
 	case fi.Mode()&os.ModeSymlink == 0:
-		return "", fmt.Errorf("refusing to re-point %s: it is not a skillsctl symlink", linkPath)
+		return "", fmt.Errorf("refusing to re-point %s: it is not a satchel symlink", linkPath)
 	}
 
 	previous, err = os.Readlink(linkPath)

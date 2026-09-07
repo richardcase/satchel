@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ func newPinCmd() *cobra.Command {
 			"receipt. A pinned skill tracks no ref, so `pin` says which one it dropped, and\n" +
 			"`outdated` still reports it when that ref moves — a pin never hides that.\n\n" +
 			"Naming a pinned skill in `update` still updates it, re-pinning it at the new\n" +
-			"commit. `skillsctl unpin` releases it for good.",
+			"commit. `satchel unpin` releases it for good.",
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runPin(cmd, args, o)

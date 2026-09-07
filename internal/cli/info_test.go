@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // infoJSON runs `info <name> --json` and decodes it.
@@ -349,7 +349,7 @@ func TestInfoWithoutASkillFileStillReportsTheReceipt(t *testing.T) {
 }
 
 // adopt records a git skill whose files are in the user's own working copy.
-// Calling that "skillsctl's store" would be a lie the path on the line above
+// Calling that "satchel's store" would be a lie the path on the line above
 // contradicts.
 func TestInfoDoesNotClaimAnAdoptedCheckoutIsInTheStore(t *testing.T) {
 	h := newHarness(t)
@@ -364,7 +364,7 @@ func TestInfoDoesNotClaimAnAdoptedCheckoutIsInTheStore(t *testing.T) {
 	if err != nil {
 		t.Fatalf("info: %v\n%s", err, out)
 	}
-	if strings.Contains(out, "(skillsctl's store)") {
+	if strings.Contains(out, "(satchel's store)") {
 		t.Errorf("info places a working copy in the store:\n%s", out)
 	}
 	if !strings.Contains(out, "working copy of your own") {
@@ -395,7 +395,7 @@ func TestInfoOnAnUnknownNameWithNothingLikeItNamesList(t *testing.T) {
 	if err == nil {
 		t.Fatalf("info accepted a name that is not installed\n%s", out)
 	}
-	if !strings.Contains(err.Error(), "skillsctl list") {
+	if !strings.Contains(err.Error(), "satchel list") {
 		t.Errorf("error = %q, want it to name the remedy", err)
 	}
 }

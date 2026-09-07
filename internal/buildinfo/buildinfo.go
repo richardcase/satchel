@@ -22,7 +22,7 @@ type Info struct {
 }
 
 func (i Info) String() string {
-	return fmt.Sprintf("skillsctl %s (%s, %s)", i.Version, i.Commit, i.Date)
+	return fmt.Sprintf("satchel %s (%s, %s)", i.Version, i.Commit, i.Date)
 }
 
 // Get returns the build provenance, preferring ldflags-injected values and

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
 	"github.com/spf13/cobra"
 )
 
@@ -84,7 +84,7 @@ func hintReclaimable(cmd *cobra.Command, e *env, db *state.DB) {
 	if err != nil || rep.IsEmpty() {
 		return
 	}
-	cmd.Printf("%s (%s) now unreferenced; run `skillsctl gc` to reclaim\n", gcSummary(rep), humanBytes(rep.Bytes()))
+	cmd.Printf("%s (%s) now unreferenced; run `satchel gc` to reclaim\n", gcSummary(rep), humanBytes(rep.Bytes()))
 }
 
 // liveRoots reduces the receipt set to the store's root set.
@@ -114,7 +114,7 @@ func (e *env) liveRoots(db *state.DB) store.Live {
 }
 
 // reportGC writes the whole report to stdout. cmd.Print and friends resolve to
-// stderr unless a writer was set, so redirecting `skillsctl gc` would otherwise
+// stderr unless a writer was set, so redirecting `satchel gc` would otherwise
 // split the listing from its summary across two streams.
 func reportGC(cmd *cobra.Command, rep store.Report, dryRun, asJSON bool) error {
 	out := cmd.OutOrStdout()

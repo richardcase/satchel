@@ -55,7 +55,7 @@ func TestGetHandlesMissingBuildInfo(t *testing.T) {
 
 func TestStringIsSingleLine(t *testing.T) {
 	s := Info{Version: "v1.0.0", Commit: "abc1234", Date: "2026-08-13T00:00:00Z"}.String()
-	want := "skillsctl v1.0.0 (abc1234, 2026-08-13T00:00:00Z)"
+	want := "satchel v1.0.0 (abc1234, 2026-08-13T00:00:00Z)"
 	if s != want {
 		t.Errorf("String() = %q, want %q", s, want)
 	}

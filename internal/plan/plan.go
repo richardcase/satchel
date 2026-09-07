@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // Op is a single user-visible mutation.
@@ -41,7 +41,7 @@ func (o Relink) Describe() string {
 	return fmt.Sprintf("relink  %s -> %s [%s]", o.LinkPath, o.RevPath, o.Target)
 }
 
-// Unlink removes a symlink skillsctl created.
+// Unlink removes a symlink satchel created.
 type Unlink struct {
 	Target   string
 	LinkPath string

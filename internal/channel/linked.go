@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // linked supplies the removal contract for every channel whose skills reach an
-// agent through a symlink skillsctl created. The links a receipt records are
+// agent through a symlink satchel created. The links a receipt records are
 // the complete account of what to undo, which is what lets remove be exact
 // rather than inferring anything from the filesystem.
 //
@@ -126,7 +126,7 @@ func linkPathFor(t target.Target, name string) (string, error) {
 }
 
 // Rollback refuses: this channel's files are the user's own, with no
-// revision history skillsctl can swap back to. Git and OCI, which embed
+// revision history satchel can swap back to. Git and OCI, which embed
 // linked too, override this with the real thing.
 func (linked) Rollback(context.Context, state.Receipt, bool) (plan.Plan, Verdict, error) {
 	return plan.Plan{}, Verdict{}, ErrRollbackUnsupported

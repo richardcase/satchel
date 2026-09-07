@@ -98,7 +98,7 @@ func TestLinkPointsAHandMadeSymlinkAtAdopt(t *testing.T) {
 		t.Fatal("Link re-pointed a symlink somebody else made; want an error")
 	}
 	// Taking it over is the whole point of adopt, so the error has to say so.
-	if !strings.Contains(err.Error(), "skillsctl adopt") {
+	if !strings.Contains(err.Error(), "satchel adopt") {
 		t.Errorf("error = %q, want it to name adopt as the takeover path", err)
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // singleSkillRepo is a fixture with exactly one skill, so the skill-ambiguity

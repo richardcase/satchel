@@ -4,12 +4,12 @@ Instructions for AI agents and human contributors working in this repository.
 
 ## Overview
 
-`skillsctl` is a Go CLI that installs agent skills from git repositories into a
-content-addressed store at `~/.local/share/skillsctl`, then symlinks them into
+`satchel` is a Go CLI that installs agent skills from git repositories into a
+content-addressed store at `~/.local/share/satchel`, then symlinks them into
 each agent's skills directory. Every install writes a receipt, so `list` is
 accurate and `remove` never has to infer anything.
 
-- Module: `github.com/richardcase/skillsctl`
+- Module: `github.com/richardcase/satchel`
 - Go 1.25 (`GOTOOLCHAIN=local` — do not rely on toolchain auto-download)
 - Licence: Apache-2.0
 
@@ -25,7 +25,7 @@ make test         # go test -race -cover ./...
 make test-manual  # opt-in: really runs claude plugin install|uninstall
 make lint         # golangci-lint run
 make fmt          # golangci-lint fmt (gofumpt + goimports)
-make build        # go build -o skillsctl ./cmd/skillsctl
+make build        # go build -o satchel ./cmd/satchel
 make tidy-check   # go mod tidy, then fail if go.mod/go.sum changed
 make snapshot     # goreleaser release --snapshot --clean
 ```
@@ -113,7 +113,7 @@ belongs in `AGENTS.md` as part of the change that introduces it.
 
 ## Architecture
 
-`cmd/skillsctl/main.go` is a thin `main` that calls `cli.Execute()`. Everything
+`cmd/satchel/main.go` is a thin `main` that calls `cli.Execute()`. Everything
 else lives in `internal/`, one narrow responsibility per package:
 
 | Package | Responsibility |
@@ -189,7 +189,7 @@ else lives in `internal/`, one narrow responsibility per package:
   Exported identifiers need doc comments — revive enforces it.
 - **Tests use the standard library only.** No testify, no mocks, no golden
   files. Table-driven subtests with `t.Run`, `t.TempDir()` for filesystem work,
-  `t.Setenv("SKILLSCTL_HOME", ...)` / `t.Setenv("SKILLSCTL_CONFIG", ...)` for
+  `t.Setenv("SATCHEL_HOME", ...)` / `t.Setenv("SATCHEL_CONFIG", ...)` for
   isolation, and `internal/testrepo` for `file://` fixtures so no test touches
   the network. **Never call `t.Parallel()`** — `t.Setenv` forbids it. Inject
   side effects through func fields (`plan.Executor.Run`, `buildinfo.get`). Tests
@@ -208,7 +208,7 @@ else lives in `internal/`, one narrow responsibility per package:
   `github.com/google/go-containerregistry` came in with the OCI channel. It is
   the de facto standard registry client for Go — `crane` and `ko` are built on
   it — and it reads Docker's own config file and credential helpers, so
-  skillsctl reimplements no part of `docker login`. That makes it the one
+  satchel reimplements no part of `docker login`. That makes it the one
   deliberate exception to "a binary we shell out to gets a package and an
   interface": `gitx` and `claudex` wrap a binary, while `ocix` wraps a library
   that reads the binary's configuration, because there is no registry CLI every

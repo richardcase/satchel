@@ -3,10 +3,10 @@ package cli
 import (
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/outdated"
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/outdated"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -18,8 +18,8 @@ func newBrowseCmd() *cobra.Command {
 		Short: "Pick installed skills to update or remove",
 		Long: "List installed skills with their outdated status, tick the ones to act on,\n" +
 			"then choose update or remove for the whole batch.\n\n" +
-			"There is no non-interactive form: run `skillsctl update` or\n" +
-			"`skillsctl remove <name>` directly when nobody is there to answer the picker.",
+			"There is no non-interactive form: run `satchel update` or\n" +
+			"`satchel remove <name>` directly when nobody is there to answer the picker.",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runBrowse(cmd, dryRun)
@@ -50,7 +50,7 @@ func runBrowse(cmd *cobra.Command, dryRun bool) error {
 	p := newPicker()
 	if !p.Interactive() {
 		_ = h.Close()
-		return fmt.Errorf("browse has nobody to ask: run `skillsctl update` or `skillsctl remove <name>` directly")
+		return fmt.Errorf("browse has nobody to ask: run `satchel update` or `satchel remove <name>` directly")
 	}
 
 	entries := outdated.Check(cmd.Context(), gitx.New(), newPlugins(), newOCI(), receipts)
@@ -145,7 +145,7 @@ func selectBrowseAction(p picker) (string, error) {
 }
 
 // runBrowseRemove removes each chosen name in turn through runRemove, the
-// same path `skillsctl remove` takes, and reports the batch the way a
+// same path `satchel remove` takes, and reports the batch the way a
 // multi-skill install already does: some succeeding and some failing is a
 // partial result, not a failure of the whole command.
 func runBrowseRemove(cmd *cobra.Command, names []string, dryRun bool) error {

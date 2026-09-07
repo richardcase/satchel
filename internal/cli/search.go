@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/richardcase/skillsctl/internal/registry"
+	"github.com/richardcase/satchel/internal/registry"
 	"github.com/spf13/cobra"
 )
 
@@ -16,8 +16,8 @@ func newSearchCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "search <query>",
 		Short: "Find skills in the registry by name, description or tag",
-		Long: "Search skillsctl's curated registry for skills matching query, printing a\n" +
-			"source for each match that can be passed straight to `skillsctl install`.",
+		Long: "Search satchel's curated registry for skills matching query, printing a\n" +
+			"source for each match that can be passed straight to `satchel install`.",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSearch(cmd, args[0], asJSON)
@@ -36,7 +36,7 @@ func runSearch(cmd *cobra.Command, query string, asJSON bool) error {
 
 	entries, err := e.registry().Fetch(cmd.Context())
 	if err != nil {
-		return fmt.Errorf("search: %w (check connectivity, or override the source with SKILLSCTL_REGISTRY_URL)", err)
+		return fmt.Errorf("search: %w (check connectivity, or override the source with SATCHEL_REGISTRY_URL)", err)
 	}
 	matches := matchEntries(entries, query)
 

@@ -17,15 +17,15 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/stream"
 	"github.com/google/go-containerregistry/pkg/v1/types"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
+	"github.com/richardcase/satchel/internal/gitx"
 )
 
-// LayerMediaType identifies a skillsctl skills layer, so a registry that
+// LayerMediaType identifies a satchel skills layer, so a registry that
 // distinguishes artifact types does not mistake it for a runnable container
 // layer.
-const LayerMediaType types.MediaType = "application/vnd.skillsctl.skills.layer.v1.tar"
+const LayerMediaType types.MediaType = "application/vnd.satchel.skills.layer.v1.tar"
 
-// OCI is the set of registry operations skillsctl needs to package and
+// OCI is the set of registry operations satchel needs to package and
 // install skills as an OCI artifact.
 type OCI interface {
 	// Resolve returns the digest ref currently points at. It fetches only

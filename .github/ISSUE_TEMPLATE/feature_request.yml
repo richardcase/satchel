@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea or enhancement for skillsctl
+description: Suggest an idea or enhancement for satchel
 labels: [enhancement]
 body:
   - type: textarea
@@ -14,7 +14,7 @@ body:
     id: solution
     attributes:
       label: Proposed solution
-      description: What would you like skillsctl to do instead?
+      description: What would you like satchel to do instead?
     validations:
       required: true
 

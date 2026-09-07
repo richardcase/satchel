@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/registry"
+	"github.com/richardcase/satchel/internal/registry"
 )
 
 // fakeRegistry stands in for the network. h.registry defaults to

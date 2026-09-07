@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"text/tabwriter"
 
-	"github.com/richardcase/skillsctl/internal/doctor"
+	"github.com/richardcase/satchel/internal/doctor"
 	"github.com/spf13/cobra"
 )
 
@@ -61,7 +61,7 @@ func newDoctorCmd() *cobra.Command {
 
 // reportDoctor writes the whole report to stdout. cmd.Print and friends resolve
 // to stderr unless a writer was set, and the report is the command's product:
-// `skillsctl doctor --json > health.json` has to capture it.
+// `satchel doctor --json > health.json` has to capture it.
 func reportDoctor(cmd *cobra.Command, rep doctor.Report, asJSON bool) error {
 	out := cmd.OutOrStdout()
 

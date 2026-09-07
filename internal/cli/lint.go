@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/lint"
+	"github.com/richardcase/satchel/internal/lint"
 	"github.com/spf13/cobra"
 )
 

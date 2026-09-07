@@ -6,17 +6,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/manifest"
-	"github.com/richardcase/skillsctl/internal/ocix"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/testregistry"
+	"github.com/richardcase/satchel/internal/manifest"
+	"github.com/richardcase/satchel/internal/ocix"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/testregistry"
 )
 
 func TestPackageInstallOutdatedUpdateRemoveRoundTrip(t *testing.T) {
 	h := newHarness(t)
 	// Use the real registry client end to end; only the transport (an
 	// in-process httptest server) is fake, so this exercises the exact code
-	// path skillsctl runs against a real registry.
+	// path satchel runs against a real registry.
 	h.oci = ocix.New()
 
 	host := testregistry.New(t)

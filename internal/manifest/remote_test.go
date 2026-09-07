@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 func TestFetchRemoteReadsSkillsTomlAtHEAD(t *testing.T) {

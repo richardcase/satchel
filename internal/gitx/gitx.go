@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-// Git is the set of git operations skillsctl needs.
+// Git is the set of git operations satchel needs.
 type Git interface {
 	// Resolve returns the commit sha for ref (empty ref means HEAD).
 	Resolve(ctx context.Context, repoURL, ref string) (string, error)

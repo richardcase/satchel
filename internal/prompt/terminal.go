@@ -23,7 +23,7 @@ const (
 //
 // Out is where the block is drawn, and it is the stream whose size and
 // terminal-ness decide the layout — which is why a caller passes stderr rather
-// than stdout: `skillsctl install repo > log` should still be able to ask.
+// than stdout: `satchel install repo > log` should still be able to ask.
 type Terminal struct {
 	In  *os.File
 	Out *os.File

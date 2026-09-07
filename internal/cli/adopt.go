@@ -7,12 +7,12 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/adopt"
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/adopt"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
 	"github.com/spf13/cobra"
 )
 

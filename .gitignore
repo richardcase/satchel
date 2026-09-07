@@ -1,5 +1,5 @@
 /dist/
-/skillsctl
+/satchel
 *.test
 .DS_Store
 

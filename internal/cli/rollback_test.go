@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 func TestRollbackSwapsBackToThePreviousRevision(t *testing.T) {

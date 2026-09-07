@@ -86,10 +86,10 @@ func TestUntarRejectsMaliciousEntries(t *testing.T) {
 		{
 			name: "regular file with an absolute name",
 			entries: []tarEntry{
-				{name: "/tmp/skillsctl-untar-test-escape", typeflag: tar.TypeReg, body: "pwned"},
+				{name: "/tmp/satchel-untar-test-escape", typeflag: tar.TypeReg, body: "pwned"},
 			},
 			mustNotExist: func(string) []string {
-				return []string{"/tmp/skillsctl-untar-test-escape"}
+				return []string{"/tmp/satchel-untar-test-escape"}
 			},
 		},
 		{
@@ -219,7 +219,7 @@ func TestUntarExtractsWellBehavedEntries(t *testing.T) {
 	}
 }
 
-// TestUntarEntryTypes proves every tar entry type skillsctl distinguishes is
+// TestUntarEntryTypes proves every tar entry type satchel distinguishes is
 // handled deliberately: representable types extract, and types with no
 // filesystem representation (device nodes, FIFOs) fail loudly instead of
 // being silently dropped.
