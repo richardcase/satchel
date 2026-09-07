@@ -1,4 +1,4 @@
-// Package target describes the agents skillsctl installs into, and manages the
+// Package target describes the agents satchel installs into, and manages the
 // symlinks in their skills directories.
 package target
 
@@ -22,13 +22,13 @@ type Target struct {
 	Plugins bool `toml:"plugins"`
 }
 
-// RegistryConfig configures where `skillsctl search` fetches the skill
+// RegistryConfig configures where `satchel search` fetches the skill
 // registry from.
 type RegistryConfig struct {
 	URL string `toml:"url"`
 }
 
-// Config is the set of agents skillsctl knows about, plus where it fetches
+// Config is the set of agents satchel knows about, plus where it fetches
 // the skill registry from.
 type Config struct {
 	Targets  []Target       `toml:"target"`
@@ -68,7 +68,7 @@ func Default() (Config, error) {
 }
 
 // configHome is XDG_CONFIG_HOME, falling back to ~/.config — the same rule
-// ConfigPath applies to skillsctl's own config file, reused here for the
+// ConfigPath applies to satchel's own config file, reused here for the
 // agents (amp, opencode) that keep their own config under it too.
 func configHome() (string, error) {
 	if x := os.Getenv("XDG_CONFIG_HOME"); x != "" {
@@ -81,17 +81,56 @@ func configHome() (string, error) {
 	return filepath.Join(home, ".config"), nil
 }
 
-// ConfigPath is where the agent table lives, honouring SKILLSCTL_CONFIG and
+// ConfigPath is where the agent table lives, honouring SATCHEL_CONFIG and
 // XDG_CONFIG_HOME before falling back to ~/.config.
 func ConfigPath() (string, error) {
-	if p := os.Getenv("SKILLSCTL_CONFIG"); p != "" {
+	if p := os.Getenv("SATCHEL_CONFIG"); p != "" {
 		return p, nil
 	}
+	return defaultConfigPath()
+}
+
+// defaultConfigPath computes the XDG_CONFIG_HOME/~/.config default,
+// ignoring any env var override. MigrateConfig uses the same helper to
+// locate the current default; the pre-rename path is built separately since
+// its leaf directory name differs.
+func defaultConfigPath() (string, error) {
 	cfgHome, err := configHome()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(cfgHome, "skillsctl", "config.toml"), nil
+	return filepath.Join(cfgHome, "satchel", "config.toml"), nil
+}
+
+// MigrateConfig moves the config file from its pre-satchel default location
+// to newPath. It is a no-op unless the new default path is absent, the old
+// default path is present, and neither SATCHEL_CONFIG nor SKILLSCTL_CONFIG is
+// set — an explicit override means the file lives somewhere the user chose.
+func MigrateConfig(newPath string) (migrated bool, err error) {
+	if os.Getenv("SATCHEL_CONFIG") != "" || os.Getenv("SKILLSCTL_CONFIG") != "" {
+		return false, nil
+	}
+
+	cfgHome, err := configHome()
+	if err != nil {
+		return false, err
+	}
+	legacyPath := filepath.Join(cfgHome, "skillsctl", "config.toml")
+
+	if _, statErr := os.Stat(newPath); statErr == nil {
+		return false, nil
+	}
+	if _, statErr := os.Stat(legacyPath); statErr != nil {
+		return false, nil
+	}
+
+	if err := os.MkdirAll(filepath.Dir(newPath), 0o755); err != nil {
+		return false, fmt.Errorf("create config directory: %w", err)
+	}
+	if err := os.Rename(legacyPath, newPath); err != nil {
+		return false, fmt.Errorf("move %s to %s: %w", legacyPath, newPath, err)
+	}
+	return true, nil
 }
 
 // Load reads the agent table, returning Default when the file does not exist.

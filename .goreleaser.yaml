@@ -1,27 +1,27 @@
 version: 2
 
-project_name: skillsctl
+project_name: satchel
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: skillsctl
-    main: ./cmd/skillsctl
-    binary: skillsctl
+  - id: satchel
+    main: ./cmd/satchel
+    binary: satchel
     env:
       - CGO_ENABLED=0
     goos: [linux, darwin]
     goarch: [amd64, arm64]
     ldflags:
       - -s -w
-      - -X github.com/richardcase/skillsctl/internal/buildinfo.version={{ .Version }}
-      - -X github.com/richardcase/skillsctl/internal/buildinfo.commit={{ .Commit }}
-      - -X github.com/richardcase/skillsctl/internal/buildinfo.date={{ .Date }}
+      - -X github.com/richardcase/satchel/internal/buildinfo.version={{ .Version }}
+      - -X github.com/richardcase/satchel/internal/buildinfo.commit={{ .Commit }}
+      - -X github.com/richardcase/satchel/internal/buildinfo.date={{ .Date }}
 
 universal_binaries:
-  - id: skillsctl
+  - id: satchel
     replace: true
 
 archives:
@@ -34,11 +34,11 @@ archives:
 
 nfpms:
   - id: packages
-    package_name: skillsctl
+    package_name: satchel
     formats: [deb, rpm]
     maintainer: Richard Case <richmcase@gmail.com>
     description: Install, update and remove agent skills.
-    homepage: https://github.com/richardcase/skillsctl
+    homepage: https://github.com/richardcase/satchel
     license: Apache-2.0
     bindir: /usr/bin
 
@@ -47,16 +47,16 @@ homebrew_casks:
       owner: richardcase
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    homepage: https://github.com/richardcase/skillsctl
+    homepage: https://github.com/richardcase/satchel
     description: Install, update and remove agent skills.
     license: Apache-2.0
     binaries:
-      - skillsctl
+      - satchel
     hooks:
       post:
         install: |
           if OS.mac?
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/skillsctl"]
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/satchel"]
           end
 
 checksum:

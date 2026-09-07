@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/discover"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/discover"
 )
 
 func TestCategoryIsTheFirstSubpathSegmentAfterAnyCommonWrapper(t *testing.T) {

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 const skillMD = "---\nname: demo\ndescription: A demo\n---\n\nBody.\n"
@@ -245,7 +245,7 @@ func TestScanClassifiesWhatItFinds(t *testing.T) {
 				f.link("demo", dir)
 			},
 			want:   ClassSkipped,
-			reason: "skillsctl store",
+			reason: "satchel store",
 		},
 	}
 
@@ -313,7 +313,7 @@ func TestScanLeavesAManagedSkillAlone(t *testing.T) {
 
 // A hand-made link into a second agent, pointing where the receipt already
 // says its files are, is a link that receipt should have recorded. This is the
-// case `skillsctl link <name> -a <agent>` writes, found retroactively.
+// case `satchel link <name> -a <agent>` writes, found retroactively.
 func TestScanAdoptsASecondLinkForAManagedSkill(t *testing.T) {
 	f := newFixture(t)
 	dest := f.skill("demo")
@@ -352,7 +352,7 @@ func TestScanAdoptsASecondLinkForAManagedSkill(t *testing.T) {
 
 // A receipt says where its links point. Recording one that points elsewhere
 // would make update re-point a directory the user never named and remove
-// delete a symlink skillsctl did not create.
+// delete a symlink satchel did not create.
 func TestScanRefusesASecondLinkPointingSomewhereElse(t *testing.T) {
 	f := newFixture(t)
 	f.link("demo", f.skill("demo"))
@@ -548,7 +548,7 @@ func TestScanRecordsWhereAPromotedSkillCameFrom(t *testing.T) {
 func TestScanKeepsACheckoutWhoseRemoteIsNotAGitSourceLocal(t *testing.T) {
 	f := newFixture(t)
 	dir := f.skill("demo")
-	// git is happy with a filesystem remote; skillsctl could not install from it.
+	// git is happy with a filesystem remote; satchel could not install from it.
 	f.git.origins[dir] = gitx.Origin{RepoURL: "/srv/git/repo.git", SHA: "aaaa"}
 	f.link("demo", dir)
 
@@ -580,7 +580,7 @@ func TestScanRecognisesAManagedSkillBeforeJudgingWhereItPoints(t *testing.T) {
 		},
 	}}
 
-	// Everything skillsctl installs points into the store; that must not read
+	// Everything satchel installs points into the store; that must not read
 	// as the orphan case.
 	if got := only(t, f.scan(db)).Class; got != ClassManaged {
 		t.Errorf("Class = %q, want managed", got)
@@ -591,7 +591,7 @@ func TestScanRecognisesAManagedSkillBeforeJudgingWhereItPoints(t *testing.T) {
 // plugin, so a lookup by name misses it. What follows is worse than a miss: the
 // link resolves to a real directory holding a SKILL.md that is not in the store,
 // and a plugin's cache directory is a git checkout, so promote would offer to
-// adopt skillsctl's own link as a new git skill.
+// adopt satchel's own link as a new git skill.
 func TestScanTreatsAFannedOutPluginLinkAsManaged(t *testing.T) {
 	f := newFixture(t)
 	dest := f.skill("brainstorming")
@@ -612,7 +612,7 @@ func TestScanTreatsAFannedOutPluginLinkAsManaged(t *testing.T) {
 		t.Errorf("Class = %q, want ClassManaged: a link a receipt records is ours, whatever it is named", got)
 	}
 	if len(rep.Adoptions()) != 0 {
-		t.Error("offered skillsctl's own link for adoption")
+		t.Error("offered satchel's own link for adoption")
 	}
 }
 

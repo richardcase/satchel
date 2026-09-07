@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // writeManifest puts a manifest in a temp file and returns its path.
@@ -341,7 +341,7 @@ func TestSyncIsAllOrNothingWhenALinkPathIsOccupied(t *testing.T) {
 		"[[skill]]\nname = 'b'\nsource = '"+url+"//b'\n")
 
 	// A real directory, not a symlink, at the path entry b would occupy in
-	// claude — the way something other than skillsctl might already have put
+	// claude — the way something other than satchel might already have put
 	// something there.
 	occupied := filepath.Join(h.claude, "b")
 	if err := os.MkdirAll(occupied, 0o755); err != nil {
@@ -380,7 +380,7 @@ func TestSyncOnAManifestFromTheFuture(t *testing.T) {
 	if err == nil {
 		t.Fatal("sync accepted a manifest version it cannot understand")
 	}
-	if !strings.Contains(err.Error(), "upgrade skillsctl") {
+	if !strings.Contains(err.Error(), "upgrade satchel") {
 		t.Errorf("the error should name the remedy, got: %v", err)
 	}
 }

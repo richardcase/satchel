@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 const pluginID = "superpowers@claude-plugins-official"
@@ -252,7 +252,7 @@ func TestInstallPluginDryRunNamesWhatItWouldRun(t *testing.T) {
 }
 
 // adoptPluginWithCollidingSkill sets up a plugin claude already has, shipping
-// one skill named alpha, with something that is not skillsctl's already
+// one skill named alpha, with something that is not satchel's already
 // sitting at the path alpha would take in codex.
 func adoptPluginWithCollidingSkill(t *testing.T, h *harness) {
 	t.Helper()
@@ -517,7 +517,7 @@ func TestUpdatePluginBatchPartialFailureAgreesWithClaudeAfterward(t *testing.T) 
 		t.Fatalf("claude has %s @ %s, want 1.0.0: the second update failed", pluginID, installed[pluginID])
 	}
 
-	// The receipts skillsctl committed must agree with claude's real state,
+	// The receipts satchel committed must agree with claude's real state,
 	// not with what the failed plan wished for.
 	receipts := h.receipts(t)
 	if got := receipts["extra"]["resolved"]; got != "2.0.0" {
@@ -572,8 +572,8 @@ func TestUpdatePluginDryRunNotesTheLinksItWillReconcile(t *testing.T) {
 	}
 }
 
-// A plugin `claude plugin update` already moved outside skillsctl is the case
-// where skillsctl's own "updated X -> Y" line would otherwise read as
+// A plugin `claude plugin update` already moved outside satchel is the case
+// where satchel's own "updated X -> Y" line would otherwise read as
 // contradicting whatever claude itself just reported: both are true, but the
 // note is what keeps them from looking like they disagree.
 func TestUpdatePluginNotesWhenClaudeHadAlreadyMovedItOutsideSkillsctl(t *testing.T) {
@@ -584,7 +584,7 @@ func TestUpdatePluginNotesWhenClaudeHadAlreadyMovedItOutsideSkillsctl(t *testing
 	}
 
 	// What `claude plugin update` on its own would leave behind: claude moves
-	// the plugin, but skillsctl's receipt does not yet know.
+	// the plugin, but satchel's receipt does not yet know.
 	h.plugins.next = "6.4.0"
 	if err := h.plugins.exec([]string{"claude", "plugin", "update", pluginID}); err != nil {
 		t.Fatal(err)
@@ -599,7 +599,7 @@ func TestUpdatePluginNotesWhenClaudeHadAlreadyMovedItOutsideSkillsctl(t *testing
 		t.Errorf("output = %q, want the note explaining claude had already moved", out)
 	}
 	if !strings.Contains(out, "6.3.0") || !strings.Contains(out, "6.4.0") {
-		t.Errorf("output = %q, want skillsctl's own before-and-after version reported alongside the note", out)
+		t.Errorf("output = %q, want satchel's own before-and-after version reported alongside the note", out)
 	}
 }
 

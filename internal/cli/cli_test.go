@@ -11,17 +11,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/cosignx"
-	"github.com/richardcase/skillsctl/internal/ocix"
-	"github.com/richardcase/skillsctl/internal/outdated"
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/registry"
-	"github.com/richardcase/skillsctl/internal/target"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/cosignx"
+	"github.com/richardcase/satchel/internal/ocix"
+	"github.com/richardcase/satchel/internal/outdated"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/registry"
+	"github.com/richardcase/satchel/internal/target"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
-// harness points skillsctl at a temp store and two temp agent directories.
+// harness points satchel at a temp store and two temp agent directories.
 type harness struct {
 	root   string
 	agents string
@@ -174,8 +174,8 @@ func newHarness(t *testing.T) *harness {
 		t.Fatal(err)
 	}
 
-	t.Setenv("SKILLSCTL_HOME", h.root)
-	t.Setenv("SKILLSCTL_CONFIG", cfg)
+	t.Setenv("SATCHEL_HOME", h.root)
+	t.Setenv("SATCHEL_CONFIG", cfg)
 	return h
 }
 
@@ -661,7 +661,7 @@ func TestRemoveHintsAtReclaimableDisk(t *testing.T) {
 	if err != nil {
 		t.Fatalf("remove: %v\n%s", err, out)
 	}
-	if !strings.Contains(out, "skillsctl gc") {
+	if !strings.Contains(out, "satchel gc") {
 		t.Errorf("remove should point at gc for the disk it orphaned:\n%s", out)
 	}
 }
@@ -677,7 +677,7 @@ func TestGCWritesItsWholeReportToStdout(t *testing.T) {
 		t.Fatalf("remove: %v\n%s", err, out)
 	}
 
-	// `skillsctl gc > log` must capture the listing and its summary together.
+	// `satchel gc > log` must capture the listing and its summary together.
 	stdout, stderr, err := h.runSplit(t, "gc", "--dry-run")
 	if err != nil {
 		t.Fatalf("gc: %v\n%s", err, stderr)

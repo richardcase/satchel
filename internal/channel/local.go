@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // Local registers a skill that already exists on disk, where it already is.
@@ -62,7 +62,7 @@ func (c *Local) Prepare(_ context.Context, req Request) ([]Candidate, []string, 
 	found = discover.Decorate(root, found)
 
 	// The fallback name comes from the resolved path rather than from the
-	// source, so that `skillsctl install .` names the directory it was run in
+	// source, so that `satchel install .` names the directory it was run in
 	// instead of trying to call the skill ".".
 	available, err := resolveNames(found, filepath.Base(root))
 	if err != nil {
@@ -106,19 +106,19 @@ func (c *Local) resolve(req Request) (string, error) {
 		return "", fmt.Errorf("%s is not a directory: a local source is the directory holding %s", root, discover.FileName)
 	}
 
-	// A revision directory is skillsctl's own copy of somebody's repository,
+	// A revision directory is satchel's own copy of somebody's repository,
 	// not a skill of the user's. Recording one as local would put a receipt gc
 	// ignores on top of a directory gc collects.
 	if c.store.Contains(root) {
-		return "", fmt.Errorf("%s is inside the skillsctl store: install it from its source instead, so updates keep working", root)
+		return "", fmt.Errorf("%s is inside the satchel store: install it from its source instead, so updates keep working", root)
 	}
 
 	// Linking a skills directory into itself would make the symlink its own
-	// target, and linking one agent's skill into another's is what `skillsctl
+	// target, and linking one agent's skill into another's is what `satchel
 	// link <name> -a <agent>` is for.
 	for _, t := range req.Targets {
 		if within(t.Dir, root) {
-			return "", fmt.Errorf("%s is already inside %s's skills directory: skillsctl manages what is there rather than linking it again", root, t.Name)
+			return "", fmt.Errorf("%s is already inside %s's skills directory: satchel manages what is there rather than linking it again", root, t.Name)
 		}
 	}
 	return root, nil

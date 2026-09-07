@@ -6,12 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/manifest"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/manifest"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
 	"github.com/spf13/cobra"
 )
 

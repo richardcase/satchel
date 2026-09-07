@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
-	"github.com/richardcase/skillsctl/internal/update"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
+	"github.com/richardcase/satchel/internal/update"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +26,7 @@ func newUpdateCmd() *cobra.Command {
 			"With no arguments every skill is updated except the pinned ones; naming a skill\n" +
 			"updates it even when it is pinned, re-pinning it at the new commit. A skill that\n" +
 			"has been edited through its symlink is skipped unless --force, since updating it\n" +
-			"would discard the edit. The old revision stays on disk until `skillsctl gc`.",
+			"would discard the edit. The old revision stays on disk until `satchel gc`.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runUpdate(cmd, args, force, dryRun)
 		},
@@ -254,7 +254,7 @@ func updateLine(e update.Entry, verb string) string {
 // work that failed. A pin was skipped because the user asked for it to be, by
 // pinning. A channel with nothing to update from — a local skill is whatever
 // its directory says right now — had nothing to do rather than something it
-// could not do. Neither sets a code on its own; `skillsctl update` on a machine
+// could not do. Neither sets a code on its own; `satchel update` on a machine
 // holding only local skills has succeeded completely.
 func updateExit(entries []update.Entry) error {
 	var updated, skipped int

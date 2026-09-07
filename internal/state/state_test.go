@@ -250,7 +250,7 @@ func TestOpenTimesOutWithUsefulMessageWhenLockIsHeld(t *testing.T) {
 	if elapsed > time.Second {
 		t.Errorf("Open took %s; want it bounded by the shrunk lockTimeout", elapsed)
 	}
-	if !strings.Contains(notify.String(), "waiting for the skillsctl lock") {
+	if !strings.Contains(notify.String(), "waiting for the satchel lock") {
 		t.Errorf("notify = %q, want a waiting message", notify.String())
 	}
 }

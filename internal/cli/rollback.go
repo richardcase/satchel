@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func newRollbackCmd() *cobra.Command {
 			"last update, keeping their name, their agents and their pin.\n\n" +
 			"Rollback is a toggle: running it again undoes itself, swapping back to the\n" +
 			"revision the first rollback moved away from. A skill that has never been\n" +
-			"updated has nothing to roll back to. `skillsctl diff <name> --against\n" +
+			"updated has nothing to roll back to. `satchel diff <name> --against\n" +
 			"previous` shows what a rollback would change before you run it.\n\n" +
 			"A skill that has been edited through its symlink is skipped unless --force,\n" +
 			"since rolling it back would discard those edits.",

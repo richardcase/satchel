@@ -21,7 +21,7 @@ body:
     id: command
     attributes:
       label: Command run
-      description: The exact skillsctl command(s), including flags.
+      description: The exact satchel command(s), including flags.
       render: shell
     validations:
       required: true
@@ -36,9 +36,9 @@ body:
   - type: input
     id: version
     attributes:
-      label: skillsctl version
-      description: Output of `skillsctl --version`.
-      placeholder: skillsctl 0.1.0
+      label: satchel version
+      description: Output of `satchel --version`.
+      placeholder: satchel 0.1.0
     validations:
       required: true
 

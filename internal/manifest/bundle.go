@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // FromReceipts projects receipts into a manifest, returning the local skills it

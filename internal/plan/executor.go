@@ -7,8 +7,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // Executor applies a plan. Receipt changes land in DB but are not persisted:

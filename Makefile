@@ -24,7 +24,7 @@ fmt:
 	golangci-lint fmt
 
 build:
-	go build -o skillsctl ./cmd/skillsctl
+	go build -o satchel ./cmd/satchel
 
 snapshot:
 	goreleaser release --snapshot --clean

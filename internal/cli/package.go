@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/pack"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/pack"
 	"github.com/spf13/cobra"
 )
 

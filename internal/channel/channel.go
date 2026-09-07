@@ -13,11 +13,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // Ownership says who owns the files an install produced. It is the only thing
@@ -26,10 +26,10 @@ import (
 type Ownership int
 
 const (
-	// StoreOwned means skillsctl extracted the files into its own store. Its
+	// StoreOwned means satchel extracted the files into its own store. Its
 	// revision and mirror are live roots for gc.
 	StoreOwned Ownership = iota
-	// AgentOwned means the agent installed the files and owns them: skillsctl
+	// AgentOwned means the agent installed the files and owns them: satchel
 	// records the install and undoes it through the agent, and nothing of ours
 	// is in the store, so gc has nothing to count. It may still have made
 	// symlinks — a plugin's skills are fanned out to the agents that cannot
@@ -37,7 +37,7 @@ const (
 	// about what gc counts rather than about whether links exist.
 	AgentOwned
 	// UserOwned means the files are the user's own, in a directory they chose.
-	// skillsctl links to them and records where they are; it never copies them,
+	// satchel links to them and records where they are; it never copies them,
 	// never updates them, and on remove takes away only its own symlinks. Like
 	// AgentOwned the store holds nothing, and like StoreOwned the links are the
 	// removal contract — which is why there are three of these and not two.
@@ -259,7 +259,7 @@ type Channel interface {
 	Rollback(ctx context.Context, r state.Receipt, force bool) (plan.Plan, Verdict, error)
 }
 
-// ErrUnsupported reports a channel that skillsctl can parse but cannot yet
+// ErrUnsupported reports a channel that satchel can parse but cannot yet
 // install. Sources are parsed long before their channel is built, so this is
 // the difference between "that is not a source" and "not yet".
 var ErrUnsupported = errors.New("not supported yet")

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // installIntoClaudeOnly is the situation the command exists for: a skill

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/manifest"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/manifest"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // `bundle > skills.toml` has to capture the manifest and nothing else.

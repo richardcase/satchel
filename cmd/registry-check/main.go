@@ -20,9 +20,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/registry"
-	"github.com/richardcase/skillsctl/internal/source"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/registry"
+	"github.com/richardcase/satchel/internal/source"
 )
 
 // awesomeListReadmeURL is the curation source new candidates are read from.

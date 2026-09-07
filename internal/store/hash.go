@@ -12,7 +12,7 @@ import (
 )
 
 // HashDir fingerprints a directory tree by path, mode and content. It is how
-// skillsctl notices that someone edited a skill through its symlink, since
+// satchel notices that someone edited a skill through its symlink, since
 // revision directories carry no .git of their own.
 func HashDir(root string) (string, error) {
 	type entry struct {

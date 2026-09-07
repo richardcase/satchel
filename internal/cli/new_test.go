@@ -90,7 +90,7 @@ func TestNewRefusesADirectoryCreatedAfterItsOwnStatCheck(t *testing.T) {
 	if err := os.Mkdir("racer", 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join("racer", "not-skillsctl.txt"), []byte("mine"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join("racer", "not-satchel.txt"), []byte("mine"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -104,7 +104,7 @@ func TestNewRefusesADirectoryCreatedAfterItsOwnStatCheck(t *testing.T) {
 	if _, statErr := os.Stat(filepath.Join("racer", "SKILL.md")); !os.IsNotExist(statErr) {
 		t.Error("new wrote into a directory it did not create")
 	}
-	body, rerr := os.ReadFile(filepath.Join("racer", "not-skillsctl.txt"))
+	body, rerr := os.ReadFile(filepath.Join("racer", "not-satchel.txt"))
 	if rerr != nil || string(body) != "mine" {
 		t.Errorf("new disturbed a competing process's file: %v, %q", rerr, body)
 	}
@@ -161,7 +161,7 @@ func TestNewDryRunChangesNothing(t *testing.T) {
 	if !strings.Contains(out, "write   preview-only/SKILL.md") {
 		t.Errorf("output = %q, want it to describe the scaffold it would write", out)
 	}
-	if !strings.Contains(out, "skillsctl link ./preview-only") {
+	if !strings.Contains(out, "satchel link ./preview-only") {
 		t.Errorf("output = %q, want it to name the follow-up link command", out)
 	}
 	if _, err := os.Stat("preview-only"); !os.IsNotExist(err) {

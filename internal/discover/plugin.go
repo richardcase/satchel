@@ -12,7 +12,7 @@ const PluginDir = ".claude-plugin"
 
 // Metadata is display-only information about the repository a set of skills
 // came from. It never affects which skills are discovered or what they are
-// named: skillsctl's own listing is friendlier when a repository says what it
+// named: satchel's own listing is friendlier when a repository says what it
 // is, and that is all this is for.
 type Metadata struct {
 	Name        string

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 func newExecutor() *Executor {

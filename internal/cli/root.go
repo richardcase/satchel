@@ -1,4 +1,4 @@
-// Package cli builds the skillsctl command tree.
+// Package cli builds the satchel command tree.
 package cli
 
 import (
@@ -14,7 +14,7 @@ import (
 // NewRootCmd builds the command tree. Tests construct a fresh tree per case.
 func NewRootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:           "skillsctl",
+		Use:           "satchel",
 		Short:         "Install, update and remove agent skills",
 		SilenceUsage:  true,
 		SilenceErrors: true,

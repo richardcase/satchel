@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/store"
 )
 
 // FetchRemote resolves raw as a git repository at ref (empty meaning its

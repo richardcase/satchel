@@ -11,9 +11,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // Entry is the verdict for one receipt. It is channel.Verdict under another

@@ -19,9 +19,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // cosignWarning is the advisory doctor prints when cosign is not on PATH.
@@ -215,7 +215,7 @@ func (r Report) Skills() int {
 // mutate should not need the channel registry to answer it.
 func Scan(ts []target.Target, db *state.DB, st *store.Store, live store.Live) (Report, error) {
 	// Findings starts empty rather than nil so a clean report marshals to
-	// "findings": [] — `skillsctl doctor --json | jq '.findings[]'` should say
+	// "findings": [] — `satchel doctor --json | jq '.findings[]'` should say
 	// nothing is wrong, not fail on null.
 	rep := Report{Findings: []Finding{}}
 
@@ -409,7 +409,7 @@ func classify(rep *Report, t target.Target, name string, db *state.DB, st *store
 	}
 
 	// Whether a receipt claims this name is asked before where it points, for
-	// the reason adopt records: everything skillsctl installs points into the
+	// the reason adopt records: everything satchel installs points into the
 	// store, so asking about the destination first would report every managed
 	// skill as an orphan.
 	switch {
@@ -527,7 +527,7 @@ func (r *Report) add(f Finding, rc *state.Receipt) {
 // whole of what report-only means: doctor knows how to put everything it finds
 // right and says so, rather than deciding on the user's behalf.
 //
-// Note what is not here: `skillsctl update`. Update moves a skill to the head of
+// Note what is not here: `satchel update`. Update moves a skill to the head of
 // the ref it tracks, and stops at "current" when the ref has not moved — which
 // is the usual state of a skill whose link somebody deleted. It repairs nothing
 // in that case, not even with --force, so naming it would send the user round a
@@ -537,25 +537,25 @@ func remedy(k Kind, name, source string, agents []string) string {
 	a := agentFlag(agents)
 	switch k {
 	case KindMissingLink, KindWrongTarget:
-		return fmt.Sprintf("skillsctl remove %s%s, then skillsctl link %s%s", name, a, name, a)
+		return fmt.Sprintf("satchel remove %s%s, then satchel link %s%s", name, a, name, a)
 	case KindNotASymlink:
-		return fmt.Sprintf("move the directory aside, then skillsctl remove %s%s and skillsctl link %s%s", name, a, name, a)
+		return fmt.Sprintf("move the directory aside, then satchel remove %s%s and satchel link %s%s", name, a, name, a)
 	case KindDanglingLink, KindMissingRevision:
-		return fmt.Sprintf("skillsctl remove %s, then %s", name, reinstall(source))
+		return fmt.Sprintf("satchel remove %s, then %s", name, reinstall(source))
 	case KindMissingSource:
-		return fmt.Sprintf("put the directory back, or skillsctl remove %s", name)
+		return fmt.Sprintf("put the directory back, or satchel remove %s", name)
 	case KindNameCollision:
-		return fmt.Sprintf("skillsctl remove %s, then install each copy under its own name with --as", name)
+		return fmt.Sprintf("satchel remove %s, then install each copy under its own name with --as", name)
 	case KindContentDrift:
 		// gc is the step that matters: install reuses a revision directory
 		// that is already there, edits and all, so without it the reinstall
 		// records the edited content as the truth instead of replacing it.
-		return fmt.Sprintf("skillsctl remove %s, skillsctl gc, then %s — or skillsctl link the directory if you meant to edit it",
+		return fmt.Sprintf("satchel remove %s, satchel gc, then %s — or satchel link the directory if you meant to edit it",
 			name, reinstall(source))
 	case KindOrphanLink:
-		return "delete the link, then skillsctl gc"
+		return "delete the link, then satchel gc"
 	case KindOrphanRevision:
-		return "skillsctl gc"
+		return "satchel gc"
 	}
 	return ""
 }
@@ -575,7 +575,7 @@ func reinstall(source string) string {
 	if source == "" {
 		return "install it again from wherever it came from"
 	}
-	return fmt.Sprintf("skillsctl install %s", source)
+	return fmt.Sprintf("satchel install %s", source)
 }
 
 // diverges reports whether the occupants of one name resolve to different

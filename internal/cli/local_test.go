@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/store"
 )
 
 const localMD = "---\nname: my-skill\ndescription: Under development\n---\n\nFirst draft.\n"
@@ -69,7 +69,7 @@ func TestLinkedSkillIsLiveAsYouEditIt(t *testing.T) {
 	}
 }
 
-// remove takes away skillsctl's own symlinks and nothing else. The source is
+// remove takes away satchel's own symlinks and nothing else. The source is
 // the user's, and they did not ask for it to be deleted.
 func TestRemoveNeverTouchesTheLocalSource(t *testing.T) {
 	h := newHarness(t)
@@ -140,7 +140,7 @@ func TestLinkRefusesASourceThatIsNotAPath(t *testing.T) {
 	if err == nil {
 		t.Fatal("link accepted a git source")
 	}
-	if !strings.Contains(err.Error(), "skillsctl install owner/repo") {
+	if !strings.Contains(err.Error(), "satchel install owner/repo") {
 		t.Errorf("error = %v, want it to name the command that does work", err)
 	}
 }

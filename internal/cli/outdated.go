@@ -6,8 +6,8 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/outdated"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/outdated"
 	"github.com/spf13/cobra"
 )
 
@@ -19,12 +19,12 @@ func newOutdatedCmd() *cobra.Command {
 		Short: "Report skills whose tracked ref has moved, or a plugin claude has moved",
 		Long: "Compare each installed skill against its remote, reading refs only — nothing is fetched.\n\n" +
 			"A plugin tracks no ref, so it is compared against what claude reports as installed now:\n" +
-			"one claude has moved since skillsctl last looked comes back stale, which `skillsctl update`\n" +
+			"one claude has moved since satchel last looked comes back stale, which `satchel update`\n" +
 			"repairs.\n\n" +
 			"Pinned skills are listed too, resolved against the repository's default branch, so a pin\n" +
 			"never hides the fact that something moved. Exits 3 when an update is available,\n" +
 			"and 2 when a remote could not be reached. A stale plugin sets neither: it is not an\n" +
-			"available update, and `skillsctl update` repairs it.",
+			"available update, and `satchel update` repairs it.",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			e, err := newEnv()
@@ -96,8 +96,8 @@ func outdatedStatus(e outdated.Entry) string {
 // permanently failing check.
 //
 // A stale plugin is deliberately not an update: nothing here knows whether a
-// newer version exists, only that skillsctl's record of the installed one has
-// fallen behind, which `skillsctl update` repairs.
+// newer version exists, only that satchel's record of the installed one has
+// fallen behind, which `satchel update` repairs.
 func outdatedExit(entries []outdated.Entry) error {
 	var unreadable, updates int
 	for _, e := range entries {

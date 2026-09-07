@@ -10,12 +10,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/cosignx"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/cosignx"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // fakeOCI is a fixed single-skill image at one digest, with a call counter

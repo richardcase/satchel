@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // Pinning is a receipt-only mutation: it freezes the revision a skill is
@@ -70,7 +70,7 @@ func (c *Git) Pin(r state.Receipt, o PinOptions) (plan.Plan, PinResult, error) {
 		// pin is what stopped a plain update re-pointing that symlink into the
 		// store, so releasing it is worth saying out loud.
 		if !c.store.Contains(r.RevPath) {
-			res.Note = fmt.Sprintf("its files are at %s, and the next update will re-point the symlinks into skillsctl's store", r.RevPath)
+			res.Note = fmt.Sprintf("its files are at %s, and the next update will re-point the symlinks into satchel's store", r.RevPath)
 		}
 	}
 
@@ -90,9 +90,9 @@ func (c *Local) Pin(state.Receipt, PinOptions) (plan.Plan, PinResult, error) {
 }
 
 // Pin refuses: the agent installs a plugin and decides which version it holds,
-// so skillsctl has nothing it could freeze.
+// so satchel has nothing it could freeze.
 func (c *Plugin) Pin(state.Receipt, PinOptions) (plan.Plan, PinResult, error) {
-	return plan.Plan{}, PinResult{}, errors.New("claude decides which version of a plugin is installed, so skillsctl cannot pin one")
+	return plan.Plan{}, PinResult{}, errors.New("claude decides which version of a plugin is installed, so satchel cannot pin one")
 }
 
 // Pin freezes this receipt at the digest it is already on, or releases it to
@@ -114,7 +114,7 @@ func (c *OCI) Pin(r state.Receipt, o PinOptions) (plan.Plan, PinResult, error) {
 	} else {
 		res.Receipt.Ref = o.Ref
 		if !c.store.Contains(r.RevPath) {
-			res.Note = fmt.Sprintf("its files are at %s, and the next update will re-point the symlinks into skillsctl's store", r.RevPath)
+			res.Note = fmt.Sprintf("its files are at %s, and the next update will re-point the symlinks into satchel's store", r.RevPath)
 		}
 	}
 

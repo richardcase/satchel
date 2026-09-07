@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/richardcase/skillsctl/internal/cosignx"
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/ocix"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/cosignx"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/ocix"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
 )
 
 // OCI installs skills packaged into an OCI artifact: an immutable revision

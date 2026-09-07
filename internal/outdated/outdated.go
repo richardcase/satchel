@@ -11,11 +11,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/ocix"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/ocix"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // Status is the verdict for one receipt.
@@ -28,7 +28,7 @@ const (
 	StatusOutdated Status = "outdated"
 	// StatusStale means the agent that owns the files has moved on: the version
 	// or the install path it reports is not the one the receipt records, so the
-	// links skillsctl made point into a directory it has replaced.
+	// links satchel made point into a directory it has replaced.
 	StatusStale Status = "stale"
 	// StatusSkipped means the receipt has no upstream to compare against.
 	StatusSkipped Status = "n/a"

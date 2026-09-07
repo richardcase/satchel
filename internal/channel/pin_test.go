@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
 )
 
 const pinSha = "9f8e7d6c5b4a39281706f5e4d3c2b1a098765432"

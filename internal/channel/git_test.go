@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 func skill(rel, name, desc string) discover.Skill {

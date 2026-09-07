@@ -35,7 +35,7 @@ type Installed struct {
 	InstallPath string `json:"installPath"`
 }
 
-// Plugins is the set of claude plugin operations skillsctl needs.
+// Plugins is the set of claude plugin operations satchel needs.
 type Plugins interface {
 	// List returns the plugins claude has installed.
 	List(ctx context.Context) ([]Installed, error)
@@ -73,7 +73,7 @@ func (c *CLI) InstallArgv(id string) []string {
 }
 
 // UninstallArgv is the command that removes id. --prune is deliberately not
-// passed: reclaiming a dependency no skillsctl receipt mentions is the user's
+// passed: reclaiming a dependency no satchel receipt mentions is the user's
 // decision to make with `claude plugin prune`, not a side effect of a remove.
 func (c *CLI) UninstallArgv(id string) []string {
 	return []string{c.Bin, "plugin", "uninstall", id, "--scope", Scope}

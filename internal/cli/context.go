@@ -2,19 +2,20 @@ package cli
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/cosignx"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/ocix"
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/registry"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/cosignx"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/ocix"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/registry"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // newRunner supplies plan.Executor.Run, which is how a plan's Exec ops reach a
@@ -36,11 +37,11 @@ var newOCI = func() ocix.OCI { return ocix.New() }
 var newCosign = func() cosignx.Cosign { return cosignx.New() }
 
 // newRegistry builds the client search fetches the skill registry through.
-// Tests replace it, so no test reaches the real network. SKILLSCTL_REGISTRY_URL
+// Tests replace it, so no test reaches the real network. SATCHEL_REGISTRY_URL
 // overrides both the config file and the built-in default, mainly so tests
 // and self-hosted mirrors do not depend on GitHub.
 var newRegistry = func(cfg target.Config, storeRoot string) registry.Registry {
-	url := os.Getenv("SKILLSCTL_REGISTRY_URL")
+	url := os.Getenv("SATCHEL_REGISTRY_URL")
 	if url == "" {
 		url = cfg.Registry.URL
 	}
@@ -52,7 +53,7 @@ var newRegistry = func(cfg target.Config, storeRoot string) registry.Registry {
 // terminal that is not there.
 //
 // It draws on stderr rather than stdout for the same reason cobra's Println
-// does: `skillsctl install repo > log` is still a question worth asking, and
+// does: `satchel install repo > log` is still a question worth asking, and
 // stdout belongs to whatever the command was piped into.
 var newPicker = func() picker { return prompt.Terminal{In: os.Stdin, Out: os.Stderr} }
 
@@ -71,15 +72,43 @@ type env struct {
 	cfg   target.Config
 }
 
+// legacyEnvHint prints a one-time notice when oldName (a pre-rename
+// SKILLSCTL_* variable) is set but satchel no longer reads it. Detect-and-warn
+// only: the old value is never read for anything but this message.
+func legacyEnvHint(newName, oldName string) {
+	if os.Getenv(newName) == "" && os.Getenv(oldName) != "" {
+		fmt.Fprintf(os.Stderr, "satchel: %s is set but no longer used; rename it to %s\n", oldName, newName)
+	}
+}
+
 func newEnv() (*env, error) {
 	root, err := store.Home()
 	if err != nil {
 		return nil, err
 	}
+	migrated, err := store.MigrateHome(context.Background(), root)
+	if err != nil {
+		return nil, err
+	}
+	if migrated {
+		fmt.Fprintf(os.Stderr, "satchel: migrated the skill store to %s\n", root)
+	}
+	legacyEnvHint("SATCHEL_HOME", "SKILLSCTL_HOME")
+
 	cfgPath, err := target.ConfigPath()
 	if err != nil {
 		return nil, err
 	}
+	cfgMigrated, err := target.MigrateConfig(cfgPath)
+	if err != nil {
+		return nil, err
+	}
+	if cfgMigrated {
+		fmt.Fprintf(os.Stderr, "satchel: migrated the config file to %s\n", cfgPath)
+	}
+	legacyEnvHint("SATCHEL_CONFIG", "SKILLSCTL_CONFIG")
+	legacyEnvHint("SATCHEL_REGISTRY_URL", "SKILLSCTL_REGISTRY_URL")
+
 	cfg, err := target.Load(cfgPath)
 	if err != nil {
 		return nil, err

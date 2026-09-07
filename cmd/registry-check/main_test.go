@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/registry"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/registry"
 )
 
 // fakeGit implements gitx.Git with only Resolve wired up — the only method

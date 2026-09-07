@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 const sha = "abcdef0123456789abcdef0123456789abcdef01"
@@ -174,7 +174,7 @@ func TestALinkDeletedByHandIsAMissingLink(t *testing.T) {
 	if got.Name != "demo" || got.Target != "codex" {
 		t.Errorf("finding = %+v, want demo/codex", got)
 	}
-	if !strings.Contains(got.Remedy, "skillsctl link demo -a codex") {
+	if !strings.Contains(got.Remedy, "satchel link demo -a codex") {
 		t.Errorf("remedy = %q, should name the command that puts the link back", got.Remedy)
 	}
 }
@@ -292,7 +292,7 @@ func TestALocalSkillWhoseDirectoryIsGoneIsAMissingSource(t *testing.T) {
 		t.Errorf("a directory outside the store is not a revision: %v", kinds(rep))
 	}
 	for _, got := range rep.Findings {
-		if got.Kind == KindMissingSource && strings.Contains(got.Remedy, "skillsctl update") {
+		if got.Kind == KindMissingSource && strings.Contains(got.Remedy, "satchel update") {
 			t.Errorf("remedy = %q, but update cannot bring back a directory somebody deleted", got.Remedy)
 		}
 	}
@@ -306,7 +306,7 @@ func TestASkillEditedThroughTheSymlinkIsDrift(t *testing.T) {
 	if got.Name != "demo" {
 		t.Errorf("finding = %+v, want demo", got)
 	}
-	if !strings.Contains(got.Remedy, "skillsctl gc") {
+	if !strings.Contains(got.Remedy, "satchel gc") {
 		t.Errorf("remedy = %q, should collect the edited revision before reinstalling", got.Remedy)
 	}
 }
@@ -336,7 +336,7 @@ func TestARevisionNoReceiptReferencesIsAnOrphan(t *testing.T) {
 	if got.Bytes == 0 {
 		t.Errorf("finding = %+v, want the size that would be reclaimed", got)
 	}
-	if !strings.Contains(got.Remedy, "skillsctl gc") {
+	if !strings.Contains(got.Remedy, "satchel gc") {
 		t.Errorf("remedy = %q, want gc", got.Remedy)
 	}
 }
@@ -479,7 +479,7 @@ func TestGroupsCollectFindingsUnderOneRemedy(t *testing.T) {
 	}
 }
 
-// No remedy may name `skillsctl update`. Update moves a skill to the head of
+// No remedy may name `satchel update`. Update moves a skill to the head of
 // the ref it tracks and stops at "current" when the ref has not moved, which is
 // the usual state of a skill whose link somebody deleted — it repairs nothing
 // there, not even with --force. A remedy that named it would send the user
@@ -490,7 +490,7 @@ func TestNoRemedyNamesUpdate(t *testing.T) {
 		if got == "" {
 			t.Errorf("%s has no remedy; every finding must name how to repair it", k)
 		}
-		if strings.Contains(got, "skillsctl update") {
+		if strings.Contains(got, "satchel update") {
 			t.Errorf("%s remedy = %q, but update does nothing when the ref has not moved", k, got)
 		}
 	}
@@ -525,7 +525,7 @@ func TestAReinstallRemedyNamesTheSource(t *testing.T) {
 		if got.Kind != KindMissingRevision && got.Kind != KindDanglingLink {
 			continue
 		}
-		if !strings.Contains(got.Remedy, "skillsctl install https://example.com/o/repo") {
+		if !strings.Contains(got.Remedy, "satchel install https://example.com/o/repo") {
 			t.Errorf("%s remedy = %q, want the receipt's source named", got.Kind, got.Remedy)
 		}
 	}

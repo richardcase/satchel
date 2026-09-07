@@ -14,15 +14,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // manualPlugin is the plugin this test installs and removes. It must ship
 // skills, since the fan-out stage needs something to link. Override it with
-// SKILLSCTL_MANUAL_PLUGIN to try another marketplace.
+// SATCHEL_MANUAL_PLUGIN to try another marketplace.
 const manualPlugin = "superpowers@claude-plugins-official"
 
 // TestManualPluginInstallAndUninstall walks install, read-back and uninstall
@@ -38,7 +38,7 @@ func TestManualPluginInstallAndUninstall(t *testing.T) {
 	}
 
 	id := manualPlugin
-	if env := os.Getenv("SKILLSCTL_MANUAL_PLUGIN"); env != "" {
+	if env := os.Getenv("SATCHEL_MANUAL_PLUGIN"); env != "" {
 		id = env
 	}
 
@@ -69,7 +69,7 @@ func TestManualPluginInstallAndUninstall(t *testing.T) {
 		// Read the receipt back from the DB rather than building a bare one:
 		// by the time cleanup runs, Link may have recorded fan-out links, and
 		// those have to be in the receipt Remove sees or codex is left holding
-		// symlinks skillsctl forgot about.
+		// symlinks satchel forgot about.
 		r := state.Receipt{Name: "manual", Source: id}
 		if got, ok := ex.DB.Receipts["manual"]; ok {
 			r = *got

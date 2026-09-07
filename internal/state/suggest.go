@@ -34,7 +34,7 @@ func (e *NotInstalledError) Error() string {
 // saying the name twice in one line reads as a mistake.
 func (e *NotInstalledError) Hint() string {
 	if len(e.Suggestions) == 0 {
-		return "not installed; run `skillsctl list` to see what is"
+		return "not installed; run `satchel list` to see what is"
 	}
 	return fmt.Sprintf("not installed; did you mean %s?", orList(e.Suggestions))
 }

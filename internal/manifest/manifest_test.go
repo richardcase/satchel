@@ -93,7 +93,7 @@ func TestDecodeRefusesAVersionFromTheFuture(t *testing.T) {
 	if err == nil {
 		t.Fatal("Decode accepted a version this build cannot understand")
 	}
-	if !strings.Contains(err.Error(), "upgrade skillsctl") {
+	if !strings.Contains(err.Error(), "upgrade satchel") {
 		t.Errorf("the error should name the remedy, got: %v", err)
 	}
 }

@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/diff"
-	"github.com/richardcase/skillsctl/internal/gitx"
+	"github.com/richardcase/satchel/internal/diff"
+	"github.com/richardcase/satchel/internal/gitx"
 	"github.com/spf13/cobra"
 )
 

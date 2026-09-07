@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 // browseChoose builds a fakePicker.choose that answers the two Selects
@@ -110,7 +110,7 @@ func TestBrowseWithNobodyToAskRefuses(t *testing.T) {
 	if err == nil {
 		t.Fatalf("browse ran with no interactive picker\n%s", out)
 	}
-	if !strings.Contains(err.Error(), "skillsctl update") || !strings.Contains(err.Error(), "skillsctl remove") {
+	if !strings.Contains(err.Error(), "satchel update") || !strings.Contains(err.Error(), "satchel remove") {
 		t.Errorf("error = %v, want it to name update and remove directly", err)
 	}
 }

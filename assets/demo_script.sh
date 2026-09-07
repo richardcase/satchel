@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# Drives skillsctl for the README demo recording.
+# Drives satchel for the README demo recording.
 #
-#   go build -o skillsctl ./cmd/skillsctl
+#   go build -o satchel ./cmd/satchel
 #   asciinema rec --window-size 112x46 -c "$(pwd)/assets/demo_script.sh" assets/demo.cast --overwrite
 #   agg assets/demo.cast assets/demo.gif
 #
 # Installs from a real clone of https://github.com/mattpocock/skills into a
-# throwaway store and agent dirs under /tmp/skillsctl-demo, so the recording
+# throwaway store and agent dirs under /tmp/satchel-demo, so the recording
 # never touches the operator's real ~/.claude or ~/.codex.
 set -euo pipefail
 
-SKILLSCTL="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/skillsctl"
-DEMO=/tmp/skillsctl-demo
+SATCHEL="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/satchel"
+DEMO=/tmp/satchel-demo
 rm -rf "$DEMO"
 mkdir -p "$DEMO/agents/claude" "$DEMO/agents/codex"
 
-export SKILLSCTL_HOME="$DEMO/store"
-export SKILLSCTL_CONFIG="$DEMO/config.toml"
-cat >"$SKILLSCTL_CONFIG" <<EOF
+export SATCHEL_HOME="$DEMO/store"
+export SATCHEL_CONFIG="$DEMO/config.toml"
+cat >"$SATCHEL_CONFIG" <<EOF
 [[target]]
 name = "claude"
 dir = "$DEMO/agents/claude"
@@ -52,11 +52,11 @@ run() {
   sleep 2
 }
 
-prompt "skillsctl install mattpocock/skills"
+prompt "satchel install mattpocock/skills"
 expect <<EXPECT
 set timeout 15
 log_user 0
-spawn $SKILLSCTL install mattpocock/skills
+spawn $SATCHEL install mattpocock/skills
 log_user 1
 expect "agents to install into:"
 after 800
@@ -77,16 +77,16 @@ EXPECT
 echo
 sleep 2
 
-run "skillsctl install mattpocock/skills --skill teach --agent claude,codex" \
-  "$SKILLSCTL" install mattpocock/skills --skill teach --agent claude,codex
+run "satchel install mattpocock/skills --skill teach --agent claude,codex" \
+  "$SATCHEL" install mattpocock/skills --skill teach --agent claude,codex
 
-run "skillsctl list" \
-  "$SKILLSCTL" list
+run "satchel list" \
+  "$SATCHEL" list
 
-run "skillsctl update --dry-run" \
-  "$SKILLSCTL" update --dry-run
+run "satchel update --dry-run" \
+  "$SATCHEL" update --dry-run
 
-run "skillsctl remove teach" \
-  "$SKILLSCTL" remove teach
+run "satchel remove teach" \
+  "$SATCHEL" remove teach
 
 sleep 1

@@ -6,9 +6,9 @@ import (
 	"io"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/state"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/state"
 )
 
 // fakeGit answers Resolve from a table keyed by repoURL + "\x00" + ref, and

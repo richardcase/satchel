@@ -3,12 +3,12 @@ package cli
 import (
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // preTicked are the agents a bare invocation ticks by default, when they are
-// already present — the same two skillsctl has always shipped built-in
+// already present — the same two satchel has always shipped built-in
 // support for the longest, kept as the default rather than every agent so
 // that the common case is still one keystroke.
 var preTicked = map[string]bool{"claude": true, "codex": true}

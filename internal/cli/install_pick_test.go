@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/prompt"
-	"github.com/richardcase/skillsctl/internal/testrepo"
+	"github.com/richardcase/satchel/internal/prompt"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 func TestInstallMultiSkillRepoInstallsWhatWasPicked(t *testing.T) {
@@ -388,7 +388,7 @@ func TestInstallPickerHidesAlreadyInstalledSkills(t *testing.T) {
 }
 
 // A name can be occupied without a receipt covering it — something other than
-// skillsctl put a symlink there, the way `claude plugin install` or a hand-made
+// satchel put a symlink there, the way `claude plugin install` or a hand-made
 // link would. No receipt means dropInstalled's old name check missed it
 // entirely, and install failed deep inside Link with a raw, confusing error.
 // It must be excluded from the picker exactly like a receipted name, and
@@ -420,7 +420,7 @@ func TestInstallPickerHidesSkillsOccupiedByAForeignSymlink(t *testing.T) {
 	if err == nil {
 		t.Fatalf("install --skill alpha succeeded despite the foreign symlink\n%s", out)
 	}
-	if !strings.Contains(err.Error(), "skillsctl adopt") {
-		t.Errorf("error = %v, want it to point at `skillsctl adopt`", err)
+	if !strings.Contains(err.Error(), "satchel adopt") {
+		t.Errorf("error = %v, want it to point at `satchel adopt`", err)
 	}
 }

@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/richardcase/skillsctl/internal/plan"
+	"github.com/richardcase/satchel/internal/plan"
 	"github.com/spf13/cobra"
 )
 

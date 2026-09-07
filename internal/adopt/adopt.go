@@ -1,5 +1,5 @@
 // Package adopt answers one question about an agent's skills directory: which
-// of the things already in it can skillsctl honestly manage?
+// of the things already in it can satchel honestly manage?
 //
 // It reads and decides; it never writes. Turning a decision into a receipt or a
 // plan belongs to the caller, which is why nothing here imports channel or
@@ -16,12 +16,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/store"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // Class is what the scan decided about one entry.
@@ -29,7 +29,7 @@ type Class string
 
 const (
 	// ClassLocal is adoptable as a local skill: a symlink to a directory that
-	// skillsctl can record but has no provenance for.
+	// satchel can record but has no provenance for.
 	ClassLocal Class = "local"
 	// ClassGit is adoptable and its provenance is recoverable: the symlink
 	// points into a clean git working copy with a remote.
@@ -151,7 +151,7 @@ func classify(ctx context.Context, t target.Target, name string, db *state.DB, g
 		// There is no symlink to record, and Links is the removal contract: a
 		// receipt without one could never be removed. Moving the directory is
 		// the one thing adopt must not do, so name the remedy instead.
-		return skip(e, fmt.Sprintf("not a symlink: move it out of %s and run skillsctl link on it", t.Dir))
+		return skip(e, fmt.Sprintf("not a symlink: move it out of %s and run satchel link on it", t.Dir))
 	}
 
 	dest, err := resolve(e.Path)
@@ -188,7 +188,7 @@ func classify(ctx context.Context, t target.Target, name string, db *state.DB, g
 	// would record a receipt that cannot be updated. Reporting it is doctor's
 	// job; all adopt can say is that it is not ours to take.
 	if st.Contains(dest) {
-		return skip(e, "points into the skillsctl store but no receipt claims it")
+		return skip(e, "points into the satchel store but no receipt claims it")
 	}
 
 	// The name comes off the filesystem and becomes a receipt key, so it is
@@ -242,7 +242,7 @@ func promote(ctx context.Context, e Entry, g gitx.Git) Entry {
 		return e
 	}
 
-	// A remote git itself is happy with is not necessarily one skillsctl can
+	// A remote git itself is happy with is not necessarily one satchel can
 	// install from later — a bare filesystem path is the common case — and a
 	// receipt whose source cannot be re-installed is worse than one that never
 	// claimed to know.
@@ -281,14 +281,14 @@ func skip(e Entry, reason string) Entry {
 //
 // A receipt that does not record *this* link is the second-link case: the skill
 // is managed, but for another agent, and the symlink in front of us is one
-// `skillsctl link <name> -a <agent>` would have made. It is adopted as a link
+// `satchel link <name> -a <agent>` would have made. It is adopted as a link
 // rather than a receipt, because adopting the name again would overwrite the
 // receipt that is already there.
 //
 // The condition is that the symlink already points at the receipt's own
 // RevPath. A receipt says where its links point — update re-points every one of
 // them and remove deletes every one of them — so recording a link to anywhere
-// else would make skillsctl act on a directory the user never gave it.
+// else would make satchel act on a directory the user never gave it.
 func managed(e Entry, r *state.Receipt) Entry {
 	for _, l := range r.Links {
 		if l.Path == e.Path {

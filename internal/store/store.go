@@ -9,31 +9,39 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/gitx"
-	"github.com/richardcase/skillsctl/internal/ocix"
+	"github.com/richardcase/satchel/internal/gitx"
+	"github.com/richardcase/satchel/internal/ocix"
 )
 
-// Store is a skillsctl data root.
+// Store is a satchel data root.
 type Store struct{ Root string }
 
 // New returns a Store rooted at root.
 func New(root string) *Store { return &Store{Root: root} }
 
-// Home locates the data root, honouring SKILLSCTL_HOME and XDG_DATA_HOME
+// Home locates the data root, honouring SATCHEL_HOME and XDG_DATA_HOME
 // before falling back to ~/.local/share. Go's os.UserConfigDir is deliberately
 // not used: on macOS it resolves to ~/Library/Application Support.
 func Home() (string, error) {
-	if p := os.Getenv("SKILLSCTL_HOME"); p != "" {
+	if p := os.Getenv("SATCHEL_HOME"); p != "" {
 		return p, nil
 	}
+	return defaultHome("satchel")
+}
+
+// defaultHome computes the XDG_DATA_HOME/~/.local/share default for leaf,
+// ignoring any env var override. It exists so migrate.go can compute both
+// the current default (leaf "satchel") and the pre-rename default (leaf
+// "satchel") from the same XDG logic.
+func defaultHome(leaf string) (string, error) {
 	if x := os.Getenv("XDG_DATA_HOME"); x != "" {
-		return filepath.Join(x, "skillsctl"), nil
+		return filepath.Join(x, leaf), nil
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("locate home directory: %w", err)
 	}
-	return filepath.Join(home, ".local", "share", "skillsctl"), nil
+	return filepath.Join(home, ".local", "share", leaf), nil
 }
 
 // MirrorPath is where the bare mirror for slug lives.
@@ -122,7 +130,7 @@ func (s *Store) Ensure(ctx context.Context, g gitx.Git, slug, repoURL, sha strin
 	}
 	defer func() {
 		if rerr := os.RemoveAll(tmp); rerr != nil {
-			fmt.Fprintf(os.Stderr, "skillsctl: could not remove temporary extraction directory %s: %v\n", tmp, rerr)
+			fmt.Fprintf(os.Stderr, "satchel: could not remove temporary extraction directory %s: %v\n", tmp, rerr)
 		}
 	}()
 
@@ -166,7 +174,7 @@ func (s *Store) EnsureOCI(ctx context.Context, o ocix.OCI, slug, ref, digest str
 	}
 	defer func() {
 		if rerr := os.RemoveAll(tmp); rerr != nil {
-			fmt.Fprintf(os.Stderr, "skillsctl: could not remove temporary extraction directory %s: %v\n", tmp, rerr)
+			fmt.Fprintf(os.Stderr, "satchel: could not remove temporary extraction directory %s: %v\n", tmp, rerr)
 		}
 	}()
 

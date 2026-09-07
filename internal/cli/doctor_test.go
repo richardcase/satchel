@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/doctor"
+	"github.com/richardcase/satchel/internal/doctor"
 )
 
 // healthy leaves one skill installed into both agents, with nothing wrong.
@@ -53,7 +53,7 @@ func TestDoctorReportsALinkDeletedByHand(t *testing.T) {
 	if !strings.Contains(out, "missing links") {
 		t.Errorf("want the finding grouped under a heading:\n%s", out)
 	}
-	if !strings.Contains(out, "skillsctl link demo-skill -a codex") {
+	if !strings.Contains(out, "satchel link demo-skill -a codex") {
 		t.Errorf("every finding names the command that repairs it:\n%s", out)
 	}
 	// doctor ran to completion; what it found is the answer, not a failure.
@@ -72,7 +72,7 @@ func TestDoctorReportsARevisionNoReceiptReferences(t *testing.T) {
 	if code != ExitUnhealthy {
 		t.Fatalf("exit = %d, want %d\n%s", code, ExitUnhealthy, out)
 	}
-	if !strings.Contains(out, "orphan revisions") || !strings.Contains(out, "skillsctl gc") {
+	if !strings.Contains(out, "orphan revisions") || !strings.Contains(out, "satchel gc") {
 		t.Errorf("want the orphaned revision reported, with gc as the remedy:\n%s", out)
 	}
 	// It is about the store, not a skill, so the summary must not claim one.
@@ -92,7 +92,7 @@ func TestDoctorReportsASkillEditedThroughItsSymlink(t *testing.T) {
 	if code != ExitUnhealthy {
 		t.Fatalf("exit = %d, want %d\n%s", code, ExitUnhealthy, out)
 	}
-	if !strings.Contains(out, "edited since install") || !strings.Contains(out, "skillsctl gc") {
+	if !strings.Contains(out, "edited since install") || !strings.Contains(out, "satchel gc") {
 		t.Errorf("want the edit reported with the way to discard it:\n%s", out)
 	}
 }
@@ -127,7 +127,7 @@ func TestDoctorIsPartialWhenAnAgentCannotBeScanned(t *testing.T) {
 func TestDoctorWritesItsWholeReportToStdout(t *testing.T) {
 	h := healthy(t)
 
-	// A clean report still has to land on stdout: `skillsctl doctor > health`
+	// A clean report still has to land on stdout: `satchel doctor > health`
 	// should not produce an empty file.
 	stdout, stderr, err := h.runSplit(t, "doctor")
 	if err != nil {
@@ -144,7 +144,7 @@ func TestDoctorWritesItsWholeReportToStdout(t *testing.T) {
 		t.Fatal(err)
 	}
 	stdout, stderr, _ = h.runSplit(t, "doctor")
-	for _, want := range []string{"missing links", "demo-skill", "fix:", "skillsctl link"} {
+	for _, want := range []string{"missing links", "demo-skill", "fix:", "satchel link"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("stdout is missing %q:\nstdout:\n%s\nstderr:\n%s", want, stdout, stderr)
 		}

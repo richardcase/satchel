@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/channel"
-	"github.com/richardcase/skillsctl/internal/discover"
-	"github.com/richardcase/skillsctl/internal/prompt"
+	"github.com/richardcase/satchel/internal/channel"
+	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/prompt"
 )
 
 // maxDescription is how much of a skill's description the listing shows.

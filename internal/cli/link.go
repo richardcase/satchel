@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 	"github.com/spf13/cobra"
 )
 
@@ -29,12 +29,12 @@ func newLinkCmd() *cobra.Command {
 		Use:   "link <name>|<path>",
 		Short: "Link an installed skill into another agent, or a skill you are working on",
 		Long: "Given the name of an installed skill, add a link to it for the agents named\n" +
-			"with -a. This is the inverse of `skillsctl remove <name> -a <agent>`, and the\n" +
+			"with -a. This is the inverse of `satchel remove <name> -a <agent>`, and the\n" +
 			"way to reach an agent that was not on this machine at install time.\n\n" +
 			"Given a path, register a skill from a directory on this machine, linked in\n" +
 			"place. Nothing is copied into the store, so edits to the directory are live in\n" +
 			"every agent immediately — which is what makes this the way to develop a skill.\n" +
-			"`skillsctl install ./path` does exactly the same thing.\n\n" +
+			"`satchel install ./path` does exactly the same thing.\n\n" +
 			"Which form you meant is decided by looking the argument up in the receipts.",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -51,11 +51,11 @@ func newLinkCmd() *cobra.Command {
 				// A bare word is the common typo here — it is neither a
 				// receipt's name nor anything source.Parse recognises — so the
 				// near-misses matter more in this message than in any other.
-				return fmt.Errorf("%q is %s\nit is not a path to a directory on this machine either: `skillsctl install %s` fetches something new",
+				return fmt.Errorf("%q is %s\nit is not a path to a directory on this machine either: `satchel install %s` fetches something new",
 					args[0], miss.Hint(), args[0])
 			}
 			if src.Channel != source.ChannelLocal {
-				return fmt.Errorf("link takes a path to a directory on this machine, and %q is a %s source: install it with `skillsctl install %s`",
+				return fmt.Errorf("link takes a path to a directory on this machine, and %q is a %s source: install it with `satchel install %s`",
 					args[0], src.Channel, args[0])
 			}
 			return runInstall(cmd, args[0], o)

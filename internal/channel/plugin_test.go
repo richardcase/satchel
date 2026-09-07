@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/richardcase/skillsctl/internal/claudex"
-	"github.com/richardcase/skillsctl/internal/plan"
-	"github.com/richardcase/skillsctl/internal/source"
-	"github.com/richardcase/skillsctl/internal/state"
-	"github.com/richardcase/skillsctl/internal/target"
+	"github.com/richardcase/satchel/internal/claudex"
+	"github.com/richardcase/satchel/internal/plan"
+	"github.com/richardcase/satchel/internal/source"
+	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/target"
 )
 
 // fakeClaude answers List from a table and counts the calls, so "one call for
@@ -652,7 +652,7 @@ func TestFanRefusesAReceiptWithNoRecordedInstallPath(t *testing.T) {
 		t.Fatal("a receipt with no recorded install path must refuse rather than stat an empty string")
 	}
 	if !strings.Contains(err.Error(), "never learned where claude installed it") {
-		t.Errorf("error = %v, want it to say skillsctl never learned the install path, not that \"\" is not a directory", err)
+		t.Errorf("error = %v, want it to say satchel never learned the install path, not that \"\" is not a directory", err)
 	}
 }
 
@@ -713,7 +713,7 @@ func TestFanRefusesToReplaceARealDirectoryAtTheLinkPath(t *testing.T) {
 	}
 	for _, l := range links {
 		if strings.HasSuffix(l.Path, "alpha") {
-			t.Error("recorded a link to a path that is a real directory, not a symlink skillsctl made")
+			t.Error("recorded a link to a path that is a real directory, not a symlink satchel made")
 		}
 	}
 }
@@ -886,7 +886,7 @@ func TestPluginRemoveFromTheOwningAgentIsRefusedWhileLinksExist(t *testing.T) {
 	if err == nil {
 		t.Fatal("uninstalling the plugin would strand codex's links, so -a claude must be refused")
 	}
-	if !strings.Contains(err.Error(), "skillsctl remove superpowers") {
+	if !strings.Contains(err.Error(), "satchel remove superpowers") {
 		t.Errorf("error = %q, want it to name the command that does mean everywhere", err)
 	}
 }
