@@ -578,54 +578,58 @@
     ]
   },
   {
-    "name": "github",
-    "source": "callstackincubator/github",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "building-ai-agent-on-cloudflare",
-    "source": "cloudflare/building-ai-agent-on-cloudflare",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
     "name": "building-mcp-server-on-cloudflare",
     "source": "cloudflare/building-mcp-server-on-cloudflare",
     "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
   },
   {
     "name": "composio",
-    "source": "composiohq/composio",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "composiohq/composio/skills/composio",
+    "description": "Routes Composio work across Composio For You and Composio Platform: connecting an agent to Gmail, Slack, GitHub, Notion, Calendar, Linear and 1000+ other apps via MCP, SDK, or CLI, plus first-time setup, integration, migration guidance, and diagnosing connection or tool-call issues.",
+    "tags": [
+      "composio",
+      "mcp",
+      "integrations",
+      "authentication",
+      "agents",
+      "sdk"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "attach-db",
-    "source": "duckdb/attach-db",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "duckdb/duckdb-skills/skills/attach-db",
+    "description": "Attaches a DuckDB database file for interactive querying: explores its schema (tables, columns, row counts) and writes a shared SQL state file so the query skill can restore the session automatically.",
+    "tags": [
+      "duckdb",
+      "sql",
+      "database",
+      "schema",
+      "cli"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "building-native-ui",
-    "source": "expo/building-native-ui",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "expo-api-routes",
-    "source": "expo/expo-api-routes",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "expo-deployment",
-    "source": "expo/expo-deployment",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "upgrading-expo",
-    "source": "expo/upgrading-expo",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "use-dom",
-    "source": "expo/use-dom",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "expo/skills/plugins/expo/skills/expo-overview",
+    "description": "Entry point and router for Expo/EAS work: detects the real goal behind a request (implement a screen, add navigation, upgrade the SDK, ship to the app stores, etc.) and routes to the correct expo-*/eas-* skill, while owning the shared Expo/EAS setup rules. Load this first, before any other Expo skill.",
+    "tags": [
+      "expo",
+      "react-native",
+      "router",
+      "eas",
+      "getting-started"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor",
+      "grok"
+    ]
   },
   {
     "name": "fal-generate",
@@ -644,187 +648,518 @@
   },
   {
     "name": "figma-generate-library",
-    "source": "figma/figma-generate-library",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "figma/mcp-server-guide/skills/figma-generate-library",
+    "description": "Builds or updates a design system in Figma from a codebase via the Figma MCP server: variables/tokens, component libraries with variant sets and variable bindings, light/dark theming, and foundations documentation. Orchestrates 20-100+ use_figma calls in phases and must be loaded together with the figma-use skill, which supplies the underlying Plugin API mechanics.",
+    "tags": [
+      "figma",
+      "design-system",
+      "design-tokens",
+      "components",
+      "mcp",
+      "plugin-api"
+    ]
   },
   {
     "name": "figma-implement-design",
-    "source": "figma/figma-implement-design",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "figma/mcp-server-guide/skills/figma-design-to-code",
+    "description": "Mandatory prerequisite before calling the Figma MCP server's get_design_context tool: drives the design-to-code workflow of pulling a Figma node's reference code, screenshot and context, then adapting that React/Tailwind output to the target project's real stack and conventions rather than pasting it verbatim.",
+    "tags": [
+      "figma",
+      "mcp",
+      "design-to-code",
+      "codegen",
+      "react",
+      "tailwind"
+    ]
   },
   {
     "name": "figma-use",
-    "source": "figma/figma-use",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "figma/mcp-server-guide/skills/figma-use",
+    "description": "Mandatory prerequisite before every use_figma tool call in the Figma MCP server: documents the Plugin API surface needed to write JavaScript that creates, edits and inspects Figma files — return-value conventions, top-level await, variable/component/auto-layout APIs, font loading and color ranges.",
+    "tags": [
+      "figma",
+      "plugin-api",
+      "mcp",
+      "javascript",
+      "canvas-automation"
+    ]
   },
   {
     "name": "firecrawl-agent",
-    "source": "firecrawl/firecrawl-agent",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "firecrawl/skills/skills/core/firecrawl-agent",
+    "description": "Autonomous multi-page extraction into structured JSON matching a schema (pricing tiers, product listings, etc.) via the Firecrawl agent CLI, for jobs beyond a single-page scrape.",
+    "tags": [
+      "firecrawl",
+      "web-scraping",
+      "structured-data",
+      "extraction",
+      "cli"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "firecrawl-browser",
-    "source": "firecrawl/firecrawl-browser",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "firecrawl/cli/skills/firecrawl-interact",
+    "description": "Drives a live browser session against a page already scraped with Firecrawl: clicking, filling forms, logging in, paginating, and infinite-scrolling to recover content a plain scrape missed or that requires interaction.",
+    "tags": [
+      "firecrawl",
+      "browser-automation",
+      "web-scraping",
+      "form-filling",
+      "cli"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "firecrawl-cli",
-    "source": "firecrawl/firecrawl-cli",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "firecrawl/cli/skills/firecrawl",
+    "description": "Runs any live-web task through the Firecrawl CLI: searching, scraping, or reading pages, gathering sources, discovering site URLs, bulk extraction, downloading a site, and change alerts, for web content specifically (local files route to a separate firecrawl-parse skill).",
+    "tags": [
+      "firecrawl",
+      "cli",
+      "web-scraping",
+      "search",
+      "crawling"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "design-review",
-    "source": "garrytan/design-review",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "garrytan/gstack/design-review",
+    "description": "Runs a designer's-eye visual QA pass on a live site: finds spacing, hierarchy, visual-consistency, AI-slop, and slow-interaction issues via before/after screenshots, then iteratively fixes them in source and commits each fix atomically.",
+    "tags": [
+      "design-review",
+      "visual-qa",
+      "ui-polish",
+      "screenshots",
+      "gstack"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor"
+    ]
   },
   {
     "name": "office-hours",
-    "source": "garrytan/office-hours",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "garrytan/gstack/office-hours",
+    "description": "A YC-office-hours-style skill for reframing a product idea before writing any code: two modes that push back on scope, surface prior sessions and design docs for the repo, and probe whether the idea is worth building.",
+    "tags": [
+      "product-strategy",
+      "brainstorming",
+      "yc",
+      "planning",
+      "gstack"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor"
+    ]
   },
   {
     "name": "plan-ceo-review",
-    "source": "garrytan/plan-ceo-review",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "garrytan/gstack/plan-ceo-review",
+    "description": "A CEO/founder-mode review of a plan before implementation: pushes the team to think bigger, expand scope where it matters, and rethink the plan against prior CEO plans and design docs for the repo.",
+    "tags": [
+      "plan-review",
+      "product-strategy",
+      "yc",
+      "founder-mode",
+      "gstack"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor"
+    ]
   },
   {
     "name": "qa",
-    "source": "garrytan/qa",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "garrytan/gstack/qa",
+    "description": "Systematically QA-tests a web application at Quick, Standard, or Exhaustive tiers, then iteratively fixes bugs in source code, committing each fix atomically and re-verifying, producing before/after health scores and a ship-readiness summary.",
+    "tags": [
+      "qa",
+      "bug-fixing",
+      "testing",
+      "web-testing",
+      "gstack"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor"
+    ]
   },
   {
     "name": "ship",
-    "source": "garrytan/ship",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "garrytan/gstack/ship",
+    "description": "Runs the release workflow end to end: detects and merges the base branch, runs tests, reviews the diff, bumps VERSION, updates CHANGELOG, then commits, pushes, and opens a PR.",
+    "tags": [
+      "release-engineering",
+      "ci-cd",
+      "git",
+      "pull-requests",
+      "gstack"
+    ],
+    "agents": [
+      "claude",
+      "codex",
+      "cursor"
+    ]
   },
   {
     "name": "agents-md",
-    "source": "getsentry/agents-md",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "getsentry/skills/skills/agents-md",
+    "description": "Creates and maintains concise, reference-backed AGENTS.md (and symlinked CLAUDE.md) project instruction files by inspecting a repo's package manager, commands, docs, and conventions, keeping the result under roughly 60-100 lines.",
+    "tags": [
+      "agents-md",
+      "documentation",
+      "project-conventions",
+      "onboarding",
+      "sentry"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "code-review",
-    "source": "getsentry/code-review",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "getsentry/skills/skills/code-review",
+    "description": "Performs a structured code review following Sentry's engineering practices: checks for runtime errors, performance issues, security vulnerabilities, design fit, and test coverage, and flags changes needing senior review.",
+    "tags": [
+      "code-review",
+      "security",
+      "testing",
+      "engineering-practices",
+      "sentry"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "find-bugs",
-    "source": "getsentry/find-bugs",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "getsentry/skills/skills/find-bugs",
+    "description": "Reviews the full diff on the current branch for bugs, security vulnerabilities, and code-quality issues by mapping the attack surface (inputs, queries, auth checks, external calls) and running a phased security checklist over every changed file.",
+    "tags": [
+      "bug-finding",
+      "security-review",
+      "code-review",
+      "git-diff",
+      "sentry"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "gemini-api-dev",
-    "source": "google-gemini/gemini-api-dev",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "gemini-interactions-api",
-    "source": "google-gemini/gemini-interactions-api",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-gemini/gemini-skills/skills/gemini-api-dev",
+    "description": "Best practices for calling the Gemini API for text generation, multi-turn chat, multimodal understanding, image and video generation, streaming responses, function calling, and structured output, and for migrating off the old generateContent API, in Python and TypeScript.",
+    "tags": [
+      "gemini",
+      "google-ai",
+      "llm",
+      "api",
+      "python",
+      "typescript"
+    ]
   },
   {
     "name": "gemini-live-api-dev",
-    "source": "google-gemini/gemini-live-api-dev",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-gemini/gemini-skills/skills/gemini-live-api-dev",
+    "description": "Building real-time, bidirectional streaming applications with the Gemini Live API: WebSocket-based audio/video/text streaming, voice activity detection, native audio features, function calling, session management, ephemeral client-side tokens, and live translation, using the google-genai (Python) and @google/genai (JS/TS) SDKs.",
+    "tags": [
+      "gemini",
+      "google-ai",
+      "websocket",
+      "streaming",
+      "audio",
+      "realtime"
+    ]
   },
   {
     "name": "vertex-ai-api-dev",
-    "source": "google-gemini/vertex-ai-api-dev",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google/skills/skills/cloud/gemini-api",
+    "description": "Guidance for using the Gemini API on Google Cloud's Agent Platform (formerly branded Vertex AI): the unified Gen AI SDK across Python/JS/Go/Java/C#, text and multimodal generation, function calling, structured output, context caching, embeddings, the Live API, batch prediction, and migrating off the legacy google-cloud-aiplatform/vertexai SDKs. The google-gemini/gemini-skills README notes this skill moved here from google-gemini/gemini-skills.",
+    "tags": [
+      "gemini",
+      "vertex-ai",
+      "google-cloud",
+      "genai-sdk",
+      "enterprise",
+      "multimodal"
+    ]
   },
   {
     "name": "design-md",
-    "source": "google-labs-code/design-md",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-labs-code/stitch-skills/plugins/stitch-utilities/skills/design-md",
+    "description": "Analyzes a Google Stitch project's technical assets and synthesizes a semantic design system into a DESIGN.md file, the source of truth Stitch uses to generate new screens consistent with the existing visual language.",
+    "tags": [
+      "google-stitch",
+      "design-system",
+      "documentation",
+      "ui"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "enhance-prompt",
-    "source": "google-labs-code/enhance-prompt",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-labs-code/stitch-skills/plugins/stitch-utilities/skills/enhance-prompt",
+    "description": "Transforms vague UI generation ideas into polished, Stitch-optimized prompts by adding specificity, UI/UX vocabulary, and design-system context for better generation results.",
+    "tags": [
+      "google-stitch",
+      "prompt-engineering",
+      "ui-generation"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "react-components",
-    "source": "google-labs-code/react-components",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-labs-code/stitch-skills/plugins/stitch-build/skills/react-components",
+    "description": "Converts Google Stitch designs into modular Vite/React components, or syncs existing React components to match the latest Stitch designs, using AST-based validation.",
+    "tags": [
+      "google-stitch",
+      "react",
+      "vite",
+      "code-generation",
+      "design-to-code"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "shadcn-ui",
-    "source": "google-labs-code/shadcn-ui",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-labs-code/stitch-skills/plugins/stitch-build/skills/shadcn-ui",
+    "description": "Guidance for discovering, installing, and customizing shadcn/ui components: a copy-into-your-project collection built on Radix UI/Base UI and Tailwind CSS rather than a traditional npm component library.",
+    "tags": [
+      "shadcn-ui",
+      "react",
+      "tailwindcss",
+      "components",
+      "ui"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "stitch-loop",
-    "source": "google-labs-code/stitch-loop",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "google-labs-code/stitch-skills/plugins/stitch-utilities/skills/stitch-loop",
+    "description": "Drives an autonomous baton-passing loop that iteratively builds a website with Google Stitch: each iteration reads the next task from a baton file, generates a page via Stitch MCP tools, integrates it into the site, and hands off instructions for the following iteration.",
+    "tags": [
+      "google-stitch",
+      "automation",
+      "website-generation",
+      "agentic-loop"
+    ],
+    "agents": [
+      "claude"
+    ]
   },
   {
     "name": "gws-calendar",
-    "source": "googleworkspace/gws-calendar",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "googleworkspace/cli/skills/gws-calendar",
+    "description": "Manage Google Calendar calendars and events via the `gws calendar` command from the Google Workspace CLI, a dynamic CLI generated from Google's Discovery Service. Includes helper recipes for inserting events and showing a cross-calendar agenda.",
+    "tags": [
+      "google-workspace",
+      "google-calendar",
+      "cli",
+      "scheduling",
+      "gws"
+    ]
   },
   {
     "name": "gws-drive",
-    "source": "googleworkspace/gws-drive",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "googleworkspace/cli/skills/gws-drive",
+    "description": "Manage Google Drive files, folders, and shared drives via the `gws drive` command from the Google Workspace CLI, a dynamic CLI generated from Google's Discovery Service. Includes a helper recipe for uploading a file with automatic metadata.",
+    "tags": [
+      "google-workspace",
+      "google-drive",
+      "cli",
+      "file-management",
+      "gws"
+    ]
   },
   {
     "name": "gws-gmail",
-    "source": "googleworkspace/gws-gmail",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "googleworkspace/cli/skills/gws-gmail",
+    "description": "Send, read, and manage Gmail messages, labels, and filters via the `gws gmail` command from the Google Workspace CLI, a dynamic CLI generated from Google's Discovery Service. Includes helper recipes for sending, triaging, and replying to email.",
+    "tags": [
+      "google-workspace",
+      "gmail",
+      "cli",
+      "email",
+      "gws"
+    ]
   },
   {
     "name": "gws-sheets",
-    "source": "googleworkspace/gws-sheets",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "googleworkspace/cli/skills/gws-sheets",
+    "description": "Read and write Google Sheets spreadsheets via the `gws sheets` command from the Google Workspace CLI, a dynamic CLI generated from Google's Discovery Service. Includes helper recipes for appending rows and reading values.",
+    "tags": [
+      "google-workspace",
+      "google-sheets",
+      "cli",
+      "spreadsheets",
+      "gws"
+    ]
   },
   {
     "name": "gws-workflow",
-    "source": "googleworkspace/gws-workflow",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "googleworkspace/cli/skills/gws-workflow",
+    "description": "Cross-service Google Workspace productivity workflows via the `gws workflow` command, chaining Calendar, Gmail, Drive, Chat, and Tasks. Ships helper recipes for standup reports, meeting prep, converting email to a task, weekly digests, and announcing a Drive file in Chat.",
+    "tags": [
+      "google-workspace",
+      "cli",
+      "automation",
+      "productivity",
+      "workflow",
+      "gws"
+    ]
   },
   {
     "name": "gsap-core",
-    "source": "greensock/gsap-core",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "greensock/gsap-skills/skills/gsap-core",
+    "description": "Official GSAP skill for the core animation API: gsap.to()/from()/fromTo(), easing, duration, stagger, defaults, and gsap.matchMedia() for responsive and reduced-motion animation. Recommended whenever a JavaScript animation library is needed without one being specified.",
+    "tags": [
+      "gsap",
+      "animation",
+      "javascript",
+      "easing",
+      "tweening"
+    ]
   },
   {
     "name": "gsap-react",
-    "source": "greensock/gsap-react",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "greensock/gsap-skills/skills/gsap-react",
+    "description": "Official GSAP skill for React integration: the useGSAP hook, ref patterns, gsap.context(), and cleanup on unmount, for animating in React or Next.js apps.",
+    "tags": [
+      "gsap",
+      "react",
+      "nextjs",
+      "animation",
+      "hooks"
+    ]
   },
   {
     "name": "gsap-scrolltrigger",
-    "source": "greensock/gsap-scrolltrigger",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "greensock/gsap-skills/skills/gsap-scrolltrigger",
+    "description": "Official GSAP skill for ScrollTrigger: scroll-linked animations, pinning, scrubbing, and triggers, for parallax and scroll-driven effects.",
+    "tags": [
+      "gsap",
+      "scrolltrigger",
+      "scroll-animation",
+      "parallax",
+      "animation"
+    ]
   },
   {
     "name": "new-terraform-provider",
-    "source": "hashicorp/new-terraform-provider",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/new-terraform-provider",
+    "description": "Scaffolds a new Terraform provider workspace built on the Plugin Framework: repo layout, go module setup, the provider server's main.go, and a provider.go with schema and Configure. Use when starting a new terraform-provider-* project.",
+    "tags": [
+      "terraform",
+      "terraform-provider",
+      "plugin-framework",
+      "scaffolding",
+      "go"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   },
   {
     "name": "provider-resources",
-    "source": "hashicorp/provider-resources",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/provider-resources",
+    "description": "Guide for implementing Terraform Provider resources and data sources with the Plugin Framework: CRUD operations, schema design, plan modifiers and validators, not-found handling, waiters for eventually consistent APIs, import support, and required acceptance test coverage.",
+    "tags": [
+      "terraform",
+      "terraform-provider",
+      "plugin-framework",
+      "resources",
+      "go"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   },
   {
     "name": "provider-test-patterns",
-    "source": "hashicorp/provider-test-patterns",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/provider-test-patterns",
+    "description": "Acceptance test patterns for Terraform providers using terraform-plugin-testing with the Plugin Framework: TestCase/TestStep structure, ConfigStateChecks and custom statecheck implementations, plan checks, import testing, sweepers, and common scenario patterns (basic, update, disappears, validation, regression).",
+    "tags": [
+      "terraform",
+      "terraform-provider",
+      "acceptance-testing",
+      "plugin-framework",
+      "go"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   },
   {
     "name": "refactor-module",
-    "source": "hashicorp/refactor-module",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/refactor-module",
+    "description": "Transforms monolithic Terraform configurations into reusable, maintainable modules following HashiCorp's module design principles: clear variable/output interfaces, encapsulation, versioning, documentation, and a migration path for existing state.",
+    "tags": [
+      "terraform",
+      "hcl",
+      "modules",
+      "refactoring",
+      "infrastructure-as-code"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   },
   {
     "name": "terraform-stacks",
-    "source": "hashicorp/terraform-stacks",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/terraform-stacks",
+    "description": "Guide for creating, modifying, and validating HashiCorp Terraform Stacks (.tfcomponent.hcl and .tfdeploy.hcl files): stack components and deployments sourced from local modules or a registry, and orchestrating infrastructure across multiple environments, regions, and cloud accounts.",
+    "tags": [
+      "terraform",
+      "terraform-stacks",
+      "hcl",
+      "infrastructure-as-code",
+      "multi-environment"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   },
   {
     "name": "terraform-style-guide",
-    "source": "hashicorp/terraform-style-guide",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+    "source": "hashicorp/agent-skills/plugins/terraform/skills/terraform-style-guide",
+    "description": "Generates and reviews Terraform HCL code following HashiCorp's official style guide: provider/version constraint ordering, data sources before dependent resources, dependency-ordered resources, and file organization conventions.",
+    "tags": [
+      "terraform",
+      "hcl",
+      "style-guide",
+      "code-generation",
+      "best-practices"
+    ],
+    "agents": [
+      "claude",
+      "codex"
+    ]
   }
 ]
