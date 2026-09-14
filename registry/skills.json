@@ -578,11 +578,6 @@
     ]
   },
   {
-    "name": "building-mcp-server-on-cloudflare",
-    "source": "cloudflare/building-mcp-server-on-cloudflare",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
     "name": "composio",
     "source": "composiohq/composio/skills/composio",
     "description": "Routes Composio work across Composio For You and Composio Platform: connecting an agent to Gmail, Slack, GitHub, Notion, Calendar, Linear and 1000+ other apps via MCP, SDK, or CLI, plus first-time setup, integration, migration guidance, and diagnosing connection or tool-call issues.",
@@ -630,21 +625,6 @@
       "cursor",
       "grok"
     ]
-  },
-  {
-    "name": "fal-generate",
-    "source": "fal-ai-community/fal-generate",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "fal-realtime",
-    "source": "fal-ai-community/fal-realtime",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "fal-upscale",
-    "source": "fal-ai-community/fal-upscale",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
   },
   {
     "name": "figma-generate-library",
@@ -1161,5 +1141,255 @@
       "claude",
       "codex"
     ]
+  },
+  {
+    "name": "github",
+    "source": "callstackincubator/github",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "building-ai-agent-on-cloudflare",
+    "source": "cloudflare/building-ai-agent-on-cloudflare",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "expo-api-routes",
+    "source": "expo/expo-api-routes",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "expo-deployment",
+    "source": "expo/expo-deployment",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "upgrading-expo",
+    "source": "expo/upgrading-expo",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "use-dom",
+    "source": "expo/use-dom",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "gemini-interactions-api",
+    "source": "google-gemini/gemini-interactions-api",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "vertex-ai-api-dev",
+    "source": "google-gemini/vertex-ai-api-dev",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "hf-cli",
+    "source": "huggingface/hf-cli",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "hugging-face-datasets",
+    "source": "huggingface/hugging-face-datasets",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "hugging-face-model-trainer",
+    "source": "huggingface/hugging-face-model-trainer",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "transformers.js",
+    "source": "huggingface/transformers.js",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "knowledge-capture",
+    "source": "makenotion/knowledge-capture",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "meeting-intelligence",
+    "source": "makenotion/meeting-intelligence",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "spec-to-implementation",
+    "source": "makenotion/spec-to-implementation",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "azure-ai-openai-dotnet",
+    "source": "microsoft/azure-ai-openai-dotnet",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "azure-ai-projects-python",
+    "source": "microsoft/azure-ai-projects-python",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "azure-identity-typescript",
+    "source": "microsoft/azure-identity-typescript",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "cloud-solution-architect",
+    "source": "microsoft/cloud-solution-architect",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "copilot-sdk",
+    "source": "microsoft/copilot-sdk",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "claimable-postgres",
+    "source": "neondatabase/claimable-postgres",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "neon-postgres",
+    "source": "neondatabase/neon-postgres",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "neon-postgres-egress-optimizer",
+    "source": "neondatabase/neon-postgres-egress-optimizer",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-ai-gateway",
+    "source": "netlify/netlify-ai-gateway",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-blobs",
+    "source": "netlify/netlify-blobs",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-db",
+    "source": "netlify/netlify-db",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-deploy",
+    "source": "netlify/netlify-deploy",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-edge-functions",
+    "source": "netlify/netlify-edge-functions",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-functions",
+    "source": "netlify/netlify-functions",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "cloudflare-deploy",
+    "source": "openai/cloudflare-deploy",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "develop-web-game",
+    "source": "openai/develop-web-game",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "doc",
+    "source": "openai/doc",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "figma",
+    "source": "openai/figma",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "figma-implement-design",
+    "source": "openai/figma-implement-design",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "frontend-skill",
+    "source": "openai/frontend-skill",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "gh-address-comments",
+    "source": "openai/gh-address-comments",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "gh-fix-ci",
+    "source": "openai/gh-fix-ci",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "imagegen",
+    "source": "openai/imagegen",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "jupyter-notebook",
+    "source": "openai/jupyter-notebook",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "linear",
+    "source": "openai/linear",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "netlify-deploy",
+    "source": "openai/netlify-deploy",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "notion-knowledge-capture",
+    "source": "openai/notion-knowledge-capture",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "pdf",
+    "source": "openai/pdf",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "playwright",
+    "source": "openai/playwright",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "sora",
+    "source": "openai/sora",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "speech",
+    "source": "openai/speech",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "spreadsheet",
+    "source": "openai/spreadsheet",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "remotion",
+    "source": "remotion-dev/remotion",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "replicate",
+    "source": "replicate/replicate",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
+  },
+  {
+    "name": "content-modeling-best-practices",
+    "source": "sanity-io/content-modeling-best-practices",
+    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
   }
 ]
