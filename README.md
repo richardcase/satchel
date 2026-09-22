@@ -171,11 +171,35 @@ in the wiki.
 brew install richardcase/tap/satchel
 ```
 
-(macOS only — the Homebrew formula publishes a cask. On Linux, use the `.deb`/`.rpm`
-packages or the tarball below.)
+(macOS only — the Homebrew formula publishes a cask. On Linux, use the
+[pacman repository](#arch-linux), the `.deb`/`.rpm` packages, or the tarball below.)
 
-Or grab a binary or `.deb`/`.rpm` from the [releases page](https://github.com/richardcase/satchel/releases),
+Or grab a binary, `.deb`, `.rpm` or `.pkg.tar.zst` from the [releases page](https://github.com/richardcase/satchel/releases),
 or build from source with `go install github.com/richardcase/satchel/cmd/satchel@latest`.
+
+### Arch Linux
+
+satchel has its own signed pacman repository, for `x86_64` and `aarch64`.
+First, trust its signing key:
+
+```bash
+curl -fsSL https://richardcase.github.io/archlinux-repo/richardcase.asc | sudo pacman-key --add -
+sudo pacman-key --lsign-key A4A33462EA5B83E51E46D2DC0F5F63C609D80700
+```
+
+Then add the repository to `/etc/pacman.conf`:
+
+```ini
+[richardcase]
+Server = https://richardcase.github.io/archlinux-repo/$arch
+```
+
+```bash
+sudo pacman -Sy satchel
+```
+
+New releases then arrive with `pacman -Syu`. Stable releases only: release
+candidates are not published to the repository.
 
 ### Upgrading from skillsctl
 

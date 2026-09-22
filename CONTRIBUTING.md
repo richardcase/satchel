@@ -31,6 +31,12 @@ squash-merge subject and drives the release changelog. See AGENTS.md's
 [Commit messages](AGENTS.md#commit-messages) section for the format, allowed
 types, and real examples from this repository's history.
 
+## Releasing
+
+Maintainers cut releases by pushing a `v*.*.*` tag. The pipeline, the secrets
+it needs, and the manual setup behind the Homebrew tap and the Arch Linux
+pacman repository are documented in [docs/releasing.md](docs/releasing.md).
+
 ## Reporting bugs and requesting features
 
 Use the issue templates offered when you open a
