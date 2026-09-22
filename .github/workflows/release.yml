@@ -26,3 +26,53 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      # The pacman repository is published by the next job, which runs on
+      # Arch; hand it the packages rather than rebuilding them there.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: archlinux-packages
+          path: dist/*.pkg.tar.zst
+          if-no-files-found: error
+
+  # Adds the release to the signed pacman repository served from
+  # richardcase/archlinux-repo. Setup, secrets and key rotation are in
+  # docs/releasing.md.
+  archlinux-repo:
+    needs: release
+    # nfpm drops a prerelease or build suffix from pkgver, so v1.2.0-rc.1
+    # would be published as 1.2.0 and shadow the real release.
+    if: ${{ !contains(github.ref_name, '-') && !contains(github.ref_name, '+') }}
+    runs-on: ubuntu-latest
+    # repo-add ships with pacman, so this job runs on Arch.
+    container: archlinux:base
+    concurrency:
+      group: archlinux-repo
+      cancel-in-progress: false
+    steps:
+      # git before checkout, so checkout clones (and can push) rather than
+      # falling back to downloading a tarball.
+      - run: pacman -Syu --noconfirm --needed git gnupg
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+          path: satchel
+      - uses: actions/checkout@v7
+        with:
+          repository: richardcase/archlinux-repo
+          token: ${{ secrets.ARCH_REPO_TOKEN }}
+          path: archlinux-repo
+      - uses: actions/download-artifact@v8
+        with:
+          name: archlinux-packages
+          path: packages
+      - run: satchel/.github/scripts/publish-archlinux-repo.sh packages archlinux-repo richardcase
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.ARCH_REPO_GPG_PRIVATE_KEY }}
+      - name: Push
+        working-directory: archlinux-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "satchel ${GITHUB_REF_NAME#v}"
+          git push

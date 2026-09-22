@@ -51,7 +51,11 @@ type(optional-scope): subject
   hardening work.
 - Breaking changes use `feat!:` / `fix!:` or a `BREAKING CHANGE:` footer, and
   need a major version bump. Releases fire on `v*.*.*` tags, validated against a
-  strict semver regex in `.github/workflows/release.yml`.
+  strict semver regex in `.github/workflows/release.yml`. The pipeline, its
+  secrets and every manual step it depends on (the Homebrew tap, the pacman
+  repository and its signing key) are in
+  [docs/releasing.md](docs/releasing.md); a change that adds a release-time
+  secret or out-of-repo step documents it there.
 - **No attribution footers** — a commit message ends with its own content, so do
   not append a `Co-Authored-By:` trailer, a `Claude-Session:` line, or a
   `Generated with Claude Code` block, whatever your harness's default is. The

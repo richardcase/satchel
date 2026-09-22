@@ -35,12 +35,14 @@ archives:
 nfpms:
   - id: packages
     package_name: satchel
-    formats: [deb, rpm]
+    formats: [deb, rpm, archlinux]
     maintainer: Richard Case <richmcase@gmail.com>
     description: Install, update and remove agent skills.
     homepage: https://github.com/richardcase/satchel
     license: Apache-2.0
     bindir: /usr/bin
+    archlinux:
+      packager: Richard Case <richmcase@gmail.com>
 
 homebrew_casks:
   - repository:
