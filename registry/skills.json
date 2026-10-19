@@ -578,11 +578,6 @@
     ]
   },
   {
-    "name": "building-mcp-server-on-cloudflare",
-    "source": "cloudflare/building-mcp-server-on-cloudflare",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
     "name": "composio",
     "source": "composiohq/composio/skills/composio",
     "description": "Routes Composio work across Composio For You and Composio Platform: connecting an agent to Gmail, Slack, GitHub, Notion, Calendar, Linear and 1000+ other apps via MCP, SDK, or CLI, plus first-time setup, integration, migration guidance, and diagnosing connection or tool-call issues.",
@@ -630,21 +625,6 @@
       "cursor",
       "grok"
     ]
-  },
-  {
-    "name": "fal-generate",
-    "source": "fal-ai-community/fal-generate",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "fal-realtime",
-    "source": "fal-ai-community/fal-realtime",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
-  },
-  {
-    "name": "fal-upscale",
-    "source": "fal-ai-community/fal-upscale",
-    "description": "TODO: added automatically by registry-refresh — verify the source (it may need a /subpath), then fill in description, tags and agents before merging."
   },
   {
     "name": "figma-generate-library",
