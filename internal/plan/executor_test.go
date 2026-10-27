@@ -349,11 +349,16 @@ func TestApplyExecReportsTheCommandBeforeRunningIt(t *testing.T) {
 }
 
 func TestApplyExecWithNoProgressWriterStaysSilent(t *testing.T) {
+	var out bytes.Buffer
 	e := newExecutor() // Progress is nil
+	e.Out = &out
 	e.Run = func(context.Context, []string) error { return nil }
 	var p Plan
 	p.Add(Exec{Argv: []string{"claude", "plugin", "update", "x"}})
 	if err := e.Apply(context.Background(), p); err != nil {
 		t.Fatalf("Apply with nil Progress: %v", err)
+	}
+	if out.Len() != 0 {
+		t.Errorf("Out = %q, want nothing: with no progress writer the running line must not go anywhere else", out.String())
 	}
 }
