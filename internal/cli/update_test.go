@@ -352,3 +352,15 @@ func TestInstallDryRunPrintsProgress(t *testing.T) {
 		t.Errorf("stderr = %q, want a fetching line: the dry run resolves and mirrors too", stderr)
 	}
 }
+
+func TestInstallPrintsNoProgressForALocalSkill(t *testing.T) {
+	h := newHarness(t)
+	dir := localDir(t, nil)
+	_, stderr, err := h.runSplit(t, "install", dir)
+	if err != nil {
+		t.Fatalf("install: %v\n%s", err, stderr)
+	}
+	if strings.Contains(stderr, "fetching") || strings.Contains(stderr, "checking") {
+		t.Errorf("stderr = %q, a local install copies nothing over the network and must print no progress", stderr)
+	}
+}

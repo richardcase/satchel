@@ -415,8 +415,9 @@ func TestGitPrepareAmbiguityHeaderRedactsTheRepositoryURL(t *testing.T) {
 		t.Fatalf("Parse: %v", err)
 	}
 	c := NewGit(store.New(t.TempDir()), stubGit{})
+	var progress bytes.Buffer
 
-	_, _, err = c.Prepare(context.Background(), Request{Source: src})
+	_, _, err = c.Prepare(context.Background(), Request{Source: src, Progress: &progress})
 	var amb *Ambiguous
 	if !errors.As(err, &amb) {
 		t.Fatalf("Prepare error = %v, want *Ambiguous for a two-skill repository with nothing chosen", err)
@@ -426,5 +427,10 @@ func TestGitPrepareAmbiguityHeaderRedactsTheRepositoryURL(t *testing.T) {
 	}
 	if !strings.Contains(amb.Header, "https://github.com/o/r.git") {
 		t.Errorf("header = %q, want the redacted repository URL", amb.Header)
+	}
+	// The fetching line is the other place this URL is printed; it must be
+	// the same redacted form, or the header's redaction is only half of it.
+	if progress.String() != "fetching https://github.com/o/r.git...\n" {
+		t.Errorf("progress = %q, want the redacted fetching line and nothing else", progress.String())
 	}
 }
