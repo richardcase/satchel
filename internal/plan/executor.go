@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/richardcase/satchel/internal/state"
 	"github.com/richardcase/satchel/internal/target"
@@ -19,6 +20,14 @@ import (
 type Executor struct {
 	DB  *state.DB
 	Out io.Writer
+
+	// Progress receives one line before each Exec op runs, naming the
+	// command. Nil means silent, which is what every caller that has no
+	// slow exec to announce leaves it at. It is a separate writer from Out
+	// because Out is stdout and carries the subprocess's own output and the
+	// rollback warnings, while a "running ..." line is commentary on the
+	// command's progress and belongs on stderr with the rest of it.
+	Progress io.Writer
 
 	// Run executes an Exec op. Defaults to os/exec; tests inject a fake.
 	Run func(ctx context.Context, argv []string) error
@@ -103,6 +112,9 @@ func (e *Executor) Apply(ctx context.Context, p Plan) error {
 				}})
 			}
 		case Exec:
+			if e.Progress != nil {
+				_, _ = fmt.Fprintf(e.Progress, "running %s\n", strings.Join(o.Argv, " "))
+			}
 			err = e.run(ctx, o.Argv)
 		case Note:
 			// A note is the plan saying something it cannot yet do; there is
