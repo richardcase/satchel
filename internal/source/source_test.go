@@ -456,3 +456,19 @@ func TestRedactedDropsUserinfoFromTheRepoURL(t *testing.T) {
 		}
 	}
 }
+
+func TestParseRejectsCredentialsInAnOCIRegistryHost(t *testing.T) {
+	for _, raw := range []string{
+		"oci://user:secret@ghcr.io/owner/skills:v1",
+		"oci://token@ghcr.io/owner/skills:v1",
+	} {
+		s, err := Parse(raw)
+		if err == nil {
+			t.Errorf("Parse(%q) = %+v, want an error: registry credentials come from docker login, not the reference", raw, s)
+			continue
+		}
+		if strings.Contains(err.Error(), "secret") || strings.Contains(err.Error(), "token@") {
+			t.Errorf("Parse(%q) error = %q, repeats the credential", raw, err)
+		}
+	}
+}

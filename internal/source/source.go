@@ -242,6 +242,14 @@ func parseOCI(raw string) (Source, error) {
 	if len(parts) < 2 || parts[0] == "" || parts[1] == "" {
 		return s, fmt.Errorf("oci source %q has no repository path after the registry host", raw)
 	}
+	// A registry reference never carries credentials: the registry client
+	// reads them from Docker's config, and a host with an @ in it would be
+	// printed by every line that names the reference. Refuse it here rather
+	// than redact it everywhere, and keep the credential out of the error.
+	if strings.Contains(parts[0], "@") {
+		return s, fmt.Errorf("oci source has credentials in its registry host; remove them and run `docker login %s` instead",
+			parts[0][strings.LastIndex(parts[0], "@")+1:])
+	}
 
 	s.Registry = parts[0]
 	s.Repository = parts[1]
