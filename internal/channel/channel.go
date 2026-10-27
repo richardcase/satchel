@@ -12,6 +12,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 
 	"github.com/richardcase/satchel/internal/discover"
 	"github.com/richardcase/satchel/internal/plan"
@@ -77,6 +78,9 @@ type Request struct {
 	// together or not at all — the CLI layer enforces that.
 	VerifyIdentity string
 	VerifyIssuer   string
+	// Progress receives one line as each slow step begins, so that a fetch
+	// over the network is never silent. Nil means silent.
+	Progress io.Writer
 }
 
 // Candidate is one installable unit a channel found: a skill inside a
@@ -172,6 +176,9 @@ type UpdateOptions struct {
 	// Force updates a skill whose tree no longer matches the hash recorded at
 	// install time.
 	Force bool
+	// Progress receives one line as each slow step begins, so that a resolve
+	// over the network is never silent. Nil means silent.
+	Progress io.Writer
 }
 
 // Channel installs, updates and removes skills through one mechanism.
@@ -332,4 +339,15 @@ func (r Registry) Agents(rc *state.Receipt) []string {
 		names = append(names, l.Target)
 	}
 	return names
+}
+
+// progressf writes one progress line, or nothing when there is no writer.
+// It is a helper rather than a method on Request or UpdateOptions because
+// both carry the same writer with the same contract, and a nil check at
+// every call site is exactly the bug this exists to prevent.
+func progressf(w io.Writer, format string, args ...any) {
+	if w == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(w, format, args...)
 }

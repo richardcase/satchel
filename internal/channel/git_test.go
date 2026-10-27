@@ -1,14 +1,21 @@
 package channel
 
 import (
+	"bytes"
+	"context"
 	"errors"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/richardcase/satchel/internal/discover"
+	"github.com/richardcase/satchel/internal/gitx"
 	"github.com/richardcase/satchel/internal/source"
 	"github.com/richardcase/satchel/internal/state"
+	"github.com/richardcase/satchel/internal/store"
 	"github.com/richardcase/satchel/internal/target"
+	"github.com/richardcase/satchel/internal/testrepo"
 )
 
 func skill(rel, name, desc string) discover.Skill {
@@ -282,5 +289,148 @@ func TestAgentWarningsEmptyWhenEveryTargetIsDeclared(t *testing.T) {
 
 	if got := agentWarnings(sels, targets); len(got) != 0 {
 		t.Errorf("got %v, want no warnings when every target is declared", got)
+	}
+}
+
+// probeGit is the real git with a hook before Resolve, so a test can see what
+// was on the progress writer at the moment the slow call began.
+type probeGit struct {
+	gitx.Git
+	onResolve func()
+}
+
+func (p *probeGit) Resolve(ctx context.Context, repoURL, ref string) (string, error) {
+	if p.onResolve != nil {
+		p.onResolve()
+	}
+	return p.Git.Resolve(ctx, repoURL, ref)
+}
+
+// gitProgressFixture is a one-commit repository with its revision already in
+// the store, the receipt an install would have written for it, and the parsed
+// source, so Prepare and Update can both be driven against it.
+func gitProgressFixture(t *testing.T) (c *Git, g *probeGit, r *state.Receipt, src source.Source) {
+	t.Helper()
+
+	url, first := testrepo.New(t, map[string]string{"SKILL.md": rollbackSkillMD})
+	src, err := source.Parse(url)
+	if err != nil {
+		t.Fatalf("Parse(%q): %v", url, err)
+	}
+
+	st := store.New(t.TempDir())
+	g = &probeGit{Git: gitx.New()}
+	c = NewGit(st, g)
+
+	rev, err := st.Ensure(context.Background(), g, src.Slug(), src.RepoURL, first)
+	if err != nil {
+		t.Fatalf("Ensure: %v", err)
+	}
+	hash, err := store.HashDir(rev)
+	if err != nil {
+		t.Fatalf("HashDir: %v", err)
+	}
+	r = &state.Receipt{
+		Name: "demo", Channel: "git", Source: src.RepoURL, Slug: src.Slug(), Ref: "main",
+		Resolved: first, RevPath: rev, ContentHash: hash,
+		Links: []state.Link{{Target: "claude", Path: filepath.Join(t.TempDir(), "claude", "demo")}},
+	}
+	return c, g, r, src
+}
+
+func TestGitUpdateReportsEachSkillBeforeResolving(t *testing.T) {
+	c, g, r, _ := gitProgressFixture(t)
+	var progress bytes.Buffer
+	var atResolve string
+	g.onResolve = func() { atResolve = progress.String() }
+
+	_, _, err := c.Update(context.Background(), []*state.Receipt{r}, UpdateOptions{Progress: &progress})
+	if err != nil {
+		t.Fatalf("Update: %v", err)
+	}
+	if atResolve != "checking demo...\n" {
+		t.Errorf("progress when git was asked = %q, want the checking line already written", atResolve)
+	}
+}
+
+func TestGitUpdateReportsNothingForASkippedPin(t *testing.T) {
+	c, _, r, _ := gitProgressFixture(t)
+	r.Pinned = true
+	var progress bytes.Buffer
+
+	_, _, err := c.Update(context.Background(), []*state.Receipt{r}, UpdateOptions{Named: false, Progress: &progress})
+	if err != nil {
+		t.Fatalf("Update: %v", err)
+	}
+	if progress.Len() != 0 {
+		t.Errorf("progress = %q, want nothing for a pin update will skip", progress.String())
+	}
+}
+
+func TestGitPrepareReportsTheRepositoryBeforeResolving(t *testing.T) {
+	c, g, _, src := gitProgressFixture(t)
+	var progress bytes.Buffer
+	var atResolve string
+	g.onResolve = func() { atResolve = progress.String() }
+
+	req := Request{Source: src, All: true, Progress: &progress}
+	if _, _, err := c.Prepare(context.Background(), req); err != nil {
+		t.Fatalf("Prepare: %v", err)
+	}
+	if atResolve != "fetching "+src.Redacted()+"...\n" {
+		t.Errorf("progress when git was asked = %q, want the fetching line already written", atResolve)
+	}
+}
+
+// stubGit answers Resolve with a fixed sha and "extracts" a two-skill tree
+// without touching a repository, so a Prepare against a URL git could never
+// reach (one carrying a token) can still run to its ambiguity report.
+type stubGit struct {
+	gitx.Git
+}
+
+func (stubGit) Resolve(context.Context, string, string) (string, error) {
+	return "7c41bf0e1d5855af7b2c4d1e9f0a3b5c6d7e8f90", nil
+}
+
+func (stubGit) Mirror(context.Context, string, string) error { return nil }
+
+func (stubGit) Extract(_ context.Context, _, _, dest string) error {
+	for _, name := range []string{"alpha", "beta"} {
+		dir := filepath.Join(dest, name)
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+		body := "---\nname: " + name + "\ndescription: a skill\n---\n"
+		if err := os.WriteFile(filepath.Join(dir, "SKILL.md"), []byte(body), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func TestGitPrepareAmbiguityHeaderRedactsTheRepositoryURL(t *testing.T) {
+	src, err := source.Parse("https://tok@github.com/o/r")
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	c := NewGit(store.New(t.TempDir()), stubGit{})
+	var progress bytes.Buffer
+
+	_, _, err = c.Prepare(context.Background(), Request{Source: src, Progress: &progress})
+	var amb *Ambiguous
+	if !errors.As(err, &amb) {
+		t.Fatalf("Prepare error = %v, want *Ambiguous for a two-skill repository with nothing chosen", err)
+	}
+	if strings.Contains(amb.Header, "tok") {
+		t.Errorf("header = %q, leaks the token the fetching line was redacted to hide", amb.Header)
+	}
+	if !strings.Contains(amb.Header, "https://github.com/o/r.git") {
+		t.Errorf("header = %q, want the redacted repository URL", amb.Header)
+	}
+	// The fetching line is the other place this URL is printed; it must be
+	// the same redacted form, or the header's redaction is only half of it.
+	if progress.String() != "fetching https://github.com/o/r.git...\n" {
+		t.Errorf("progress = %q, want the redacted fetching line and nothing else", progress.String())
 	}
 }

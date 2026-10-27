@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"os"
@@ -321,5 +322,43 @@ func TestApplyNoteIsANoOp(t *testing.T) {
 	}
 	if len(db.Receipts) != 0 {
 		t.Errorf("a note changed the receipts: %v", db.Receipts)
+	}
+}
+
+func TestApplyExecReportsTheCommandBeforeRunningIt(t *testing.T) {
+	var progress bytes.Buffer
+	var ran [][]string
+	e := newExecutor()
+	e.Progress = &progress
+	e.Run = func(_ context.Context, argv []string) error {
+		if progress.String() != "running claude plugin update x\n" {
+			t.Errorf("progress at exec time = %q, want the running line already written", progress.String())
+		}
+		ran = append(ran, argv)
+		return nil
+	}
+
+	var p Plan
+	p.Add(Exec{Argv: []string{"claude", "plugin", "update", "x"}})
+	if err := e.Apply(context.Background(), p); err != nil {
+		t.Fatalf("Apply: %v", err)
+	}
+	if len(ran) != 1 {
+		t.Fatalf("ran = %v, want one exec", ran)
+	}
+}
+
+func TestApplyExecWithNoProgressWriterStaysSilent(t *testing.T) {
+	var out bytes.Buffer
+	e := newExecutor() // Progress is nil
+	e.Out = &out
+	e.Run = func(context.Context, []string) error { return nil }
+	var p Plan
+	p.Add(Exec{Argv: []string{"claude", "plugin", "update", "x"}})
+	if err := e.Apply(context.Background(), p); err != nil {
+		t.Fatalf("Apply with nil Progress: %v", err)
+	}
+	if out.Len() != 0 {
+		t.Errorf("Out = %q, want nothing: with no progress writer the running line must not go anywhere else", out.String())
 	}
 }

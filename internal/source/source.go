@@ -232,6 +232,21 @@ func parseOCI(raw string) (Source, error) {
 	// itself carry a port (127.0.0.1:5000), and only the final colon is ever
 	// the tag's.
 	rest := strings.TrimPrefix(raw, "oci://")
+
+	// A registry reference never carries credentials: the registry client
+	// reads them from Docker's config, and a host with an @ in it would be
+	// printed by every line that names the reference. Refuse it here rather
+	// than redact it everywhere, keep the credential out of the error, and
+	// do it before the shape checks below, whose errors quote the source.
+	host := rest
+	if slash := strings.Index(rest, "/"); slash >= 0 {
+		host = rest[:slash]
+	}
+	if at := strings.LastIndex(host, "@"); at >= 0 {
+		return s, fmt.Errorf("oci source has credentials in its registry host; remove them and run `docker login %s` instead",
+			strings.SplitN(host[at+1:], ":", 2)[0])
+	}
+
 	i := strings.LastIndex(rest, ":")
 	if i < 0 || i == len(rest)-1 {
 		return s, fmt.Errorf("oci source %q has no :tag", raw)
@@ -349,4 +364,24 @@ func (s Source) DefaultName() string {
 		}
 		return s.repo
 	}
+}
+
+// Redacted is the form of RepoURL that is safe to print. Parse keeps a URL's
+// userinfo in RepoURL so that git receives exactly what the user gave it,
+// which means RepoURL can carry a token. This drops the userinfo entirely
+// rather than using url.URL.Redacted, which keeps the username: a bare token
+// before the @ is a username as far as the parser is concerned. The scp-like
+// user@host:path form, which net/url cannot parse and Parse stores verbatim,
+// loses its user part the same way: it is conventionally "git", but nothing
+// stops it being a token, and the host and path are what the line is for.
+func (s Source) Redacted() string {
+	u, err := url.Parse(s.RepoURL)
+	if err != nil || u.Scheme == "" {
+		if at := strings.Index(s.RepoURL, "@"); at >= 0 && at < strings.Index(s.RepoURL, ":") {
+			return s.RepoURL[at+1:]
+		}
+		return s.RepoURL
+	}
+	u.User = nil
+	return u.String()
 }

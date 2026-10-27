@@ -829,3 +829,44 @@ func TestInstallPluginSurfacesAMissingClaude(t *testing.T) {
 		t.Errorf("error = %v, want it to name the way out", err)
 	}
 }
+
+func TestInstallPluginReportsTheCommandItRuns(t *testing.T) {
+	h := newHarness(t)
+	_, stderr, err := h.runSplit(t, "install", pluginID)
+	if err != nil {
+		t.Fatalf("install: %v\n%s", err, stderr)
+	}
+	if len(h.ran) != 1 {
+		t.Fatalf("commands run = %v, want one", h.ran)
+	}
+	checking := "checking " + pluginID + "...\n"
+	running := "running " + strings.Join(h.ran[0], " ") + "\n"
+	ci, ri := strings.Index(stderr, checking), strings.Index(stderr, running)
+	if ci < 0 || ri < 0 || ci > ri {
+		t.Errorf("stderr = %q, want %q before %q: the source is checked, then the exec is announced", stderr, checking, running)
+	}
+}
+
+func TestUpdatePluginPrintsProgressBeforeTheExec(t *testing.T) {
+	h := newHarness(t)
+	h.plugins.next = "6.3.0"
+	if out, err := h.run(t, "install", pluginID); err != nil {
+		t.Fatalf("install: %v\n%s", err, out)
+	}
+	h.plugins.next = "6.4.0"
+	h.ran = nil
+
+	_, stderr, err := h.runSplit(t, "update")
+	if err != nil {
+		t.Fatalf("update: %v\n%s", err, stderr)
+	}
+	if len(h.ran) != 1 {
+		t.Fatalf("commands run = %v, want one claude plugin update", h.ran)
+	}
+	checking := "checking superpowers...\n"
+	running := "running " + strings.Join(h.ran[0], " ") + "\n"
+	ci, ri := strings.Index(stderr, checking), strings.Index(stderr, running)
+	if ci < 0 || ri < 0 || ci > ri {
+		t.Errorf("stderr = %q, want %q before %q", stderr, checking, running)
+	}
+}

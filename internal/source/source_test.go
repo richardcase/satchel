@@ -439,3 +439,44 @@ func TestOCIDefaultNameIsTheLastRepositorySegment(t *testing.T) {
 		t.Errorf("DefaultName() = %q, want %q", got, want)
 	}
 }
+
+func TestRedactedDropsUserinfoFromTheRepoURL(t *testing.T) {
+	for _, tc := range []struct{ raw, want string }{
+		{"https://user:tok@github.com/o/r", "https://github.com/o/r.git"},
+		{"https://tok@github.com/o/r.git", "https://github.com/o/r.git"},
+		{"https://github.com/o/r", "https://github.com/o/r.git"},
+		{"ssh://git@github.com/o/r.git", "ssh://github.com/o/r.git"},
+		// The scp form has no scheme for net/url, and its user part can be a
+		// token as easily as the conventional "git", so it goes too.
+		{"git@github.com:o/r.git", "github.com:o/r.git"},
+		{"token@github.com:o/r.git", "github.com:o/r.git"},
+	} {
+		s, err := Parse(tc.raw)
+		if err != nil {
+			t.Fatalf("Parse(%q): %v", tc.raw, err)
+		}
+		if got := s.Redacted(); got != tc.want {
+			t.Errorf("Parse(%q).Redacted() = %q, want %q", tc.raw, got, tc.want)
+		}
+	}
+}
+
+func TestParseRejectsCredentialsInAnOCIRegistryHost(t *testing.T) {
+	for _, raw := range []string{
+		"oci://user:secret@ghcr.io/owner/skills:v1",
+		"oci://token@ghcr.io/owner/skills:v1",
+		// Malformed as well: the rejection must come before the errors that
+		// quote the source, or those errors print the credential instead.
+		"oci://user:secret@ghcr.io/owner/skills",
+		"oci://user:secret@ghcr.io:v1",
+	} {
+		s, err := Parse(raw)
+		if err == nil {
+			t.Errorf("Parse(%q) = %+v, want an error: registry credentials come from docker login, not the reference", raw, s)
+			continue
+		}
+		if strings.Contains(err.Error(), "secret") || strings.Contains(err.Error(), "token@") {
+			t.Errorf("Parse(%q) error = %q, repeats the credential", raw, err)
+		}
+	}
+}

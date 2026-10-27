@@ -1,6 +1,7 @@
 package update
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"path/filepath"
@@ -374,5 +375,14 @@ func TestReconcileWithNothingSettledChangesNothing(t *testing.T) {
 	entries := []Entry{{Name: "a", Status: StatusUpdated, Current: "x", Latest: "y"}}
 	if got := Reconcile(entries, nil); got[0] != entries[0] {
 		t.Errorf("Reconcile = %+v, want the entries unchanged", got[0])
+	}
+}
+
+func TestPlanForwardsTheProgressWriterToChannels(t *testing.T) {
+	f := newFixture(t)
+	var progress bytes.Buffer
+	f.plan(t, Options{Progress: &progress})
+	if progress.String() != "checking demo...\n" {
+		t.Errorf("progress = %q, want the git channel's checking line", progress.String())
 	}
 }

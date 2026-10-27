@@ -52,6 +52,10 @@ func (c *Plugin) Prepare(ctx context.Context, req Request) ([]Candidate, []strin
 		return nil, nil, err
 	}
 
+	// Asking claude is the slow step of a plugin install, and a plugin
+	// already adopted plans no exec afterwards for the executor to announce,
+	// so this is the one line such an install prints before the wait.
+	progressf(req.Progress, "checking %s...\n", req.Source.Raw)
 	installed, err := c.claude.List(ctx)
 	if err != nil {
 		return nil, nil, err
@@ -164,7 +168,12 @@ func (c *Plugin) Install(req Request, chosen []Candidate) (plan.Plan, []state.Re
 // receipt is planned as an update with no Latest, Settle reads back what claude
 // chose, and an update that moved nothing is reduced to "current" before it is
 // reported.
-func (c *Plugin) Update(ctx context.Context, rs []*state.Receipt, _ UpdateOptions) ([]Verdict, plan.Plan, error) {
+func (c *Plugin) Update(ctx context.Context, rs []*state.Receipt, o UpdateOptions) ([]Verdict, plan.Plan, error) {
+	// One `claude plugin list` answers the whole batch, so every skill in it
+	// is named before that call rather than inside the loop that follows it.
+	for _, r := range rs {
+		progressf(o.Progress, "checking %s...\n", r.Name)
+	}
 	installed, err := c.claude.List(ctx)
 	if err != nil {
 		return nil, plan.Plan{}, err

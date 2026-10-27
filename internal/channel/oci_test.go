@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -40,10 +41,14 @@ type fakeOCI struct {
 	asked       []string
 	pulled      []string
 	resolveHits int
+	onResolve   func() // called at the top of Resolve; tests use it to observe timing
 }
 
 func (f *fakeOCI) Resolve(_ context.Context, ref string) (string, error) {
 	f.resolveHits++
+	if f.onResolve != nil {
+		f.onResolve()
+	}
 	f.asked = append(f.asked, ref)
 	d := f.digest
 	if got, ok := f.byRef[ref]; ok {
@@ -531,5 +536,49 @@ func TestOCIRollbackRefusesWithNothingToRollBackTo(t *testing.T) {
 	_, _, err := c.Rollback(context.Background(), r, false)
 	if !errors.Is(err, ErrNothingToRollBackTo) {
 		t.Errorf("Rollback error = %v, want ErrNothingToRollBackTo", err)
+	}
+}
+
+func TestOCIUpdateReportsEachSkillBeforeResolving(t *testing.T) {
+	st := store.New(t.TempDir())
+	o := &fakeOCI{digest: "sha256:new"}
+	c := NewOCI(st, o, &fakeCosign{})
+	var progress bytes.Buffer
+	var atResolve string
+	o.onResolve = func() { atResolve = progress.String() }
+
+	r := &state.Receipt{
+		Name: "alpha", Channel: "oci", Source: "oci://ghcr.io/owner/skills:v1",
+		Slug: "oci/ghcr.io/owner/skills", Ref: "v1", Resolved: "sha256:old",
+		Subpath: "alpha",
+		RevPath: filepath.Join(t.TempDir(), "gone"),
+	}
+	_, _, err := c.Update(context.Background(), []*state.Receipt{r}, UpdateOptions{Progress: &progress})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if atResolve != "checking alpha...\n" {
+		t.Errorf("progress when the registry was asked = %q, want the checking line already written", atResolve)
+	}
+}
+
+func TestOCIPrepareReportsTheRefBeforeResolving(t *testing.T) {
+	st := store.New(t.TempDir())
+	o := &fakeOCI{digest: "sha256:aaa"}
+	c := NewOCI(st, o, &fakeCosign{})
+	var progress bytes.Buffer
+	var atResolve string
+	o.onResolve = func() { atResolve = progress.String() }
+
+	src, err := source.Parse("oci://ghcr.io/owner/skills:v1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	req := Request{Source: src, All: true, Progress: &progress}
+	if _, _, err := c.Prepare(context.Background(), req); err != nil {
+		t.Fatal(err)
+	}
+	if atResolve != "fetching "+src.OCIRef(req.Ref)+"...\n" {
+		t.Errorf("progress when the registry was asked = %q, want the fetching line already written", atResolve)
 	}
 }

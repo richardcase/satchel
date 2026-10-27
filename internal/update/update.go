@@ -10,6 +10,7 @@ package update
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/richardcase/satchel/internal/channel"
 	"github.com/richardcase/satchel/internal/plan"
@@ -42,6 +43,8 @@ type Options struct {
 	// Force updates a skill whose installed tree no longer matches the hash
 	// recorded at install time.
 	Force bool
+	// Progress receives one line as each slow step begins. Nil means silent.
+	Progress io.Writer
 }
 
 // Plan returns one Entry per selected receipt, in the order they were given,
@@ -57,7 +60,7 @@ func Plan(ctx context.Context, reg channel.Registry, receipts []*state.Receipt, 
 	}
 
 	entries := make([]Entry, len(selected))
-	opts := channel.UpdateOptions{Named: len(o.Names) > 0, Force: o.Force}
+	opts := channel.UpdateOptions{Named: len(o.Names) > 0, Force: o.Force, Progress: o.Progress}
 
 	// Receipts are grouped by channel so that each channel is asked once and
 	// can answer them together — git resolves a repository once however many

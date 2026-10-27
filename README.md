@@ -365,6 +365,11 @@ skills in https://github.com/vercel-labs/agent-skills.git @ 7c41bf0:
   ↑/↓ move · space toggle · a all · enter install · q cancel
 ```
 
+Before the list appears, `install` prints `fetching <url>...` on stderr as it
+resolves and mirrors the repository, so a large one is never silent; a plugin
+install prints `checking <plugin>...` while it asks `claude` what it has, then
+the `claude plugin install` command line before it runs it.
+
 `↑`/`↓` (or `k`/`j`) move, space ticks a skill, `a` ticks every one, enter
 installs what is ticked and `q` backs out. Backing out, or confirming with
 nothing ticked, exits `1` and changes nothing. With `--as`, which renames a
@@ -468,11 +473,18 @@ keeping the name, the agents and the pin:
 
 ```
 $ satchel update
+checking avoid-ai-writing...
+checking brainstorming...
 updated avoid-ai-writing 3c0fd8a -> 9071811
 skipped brainstorming: edited since it was installed; pass --force to update it anyway
 skipped pinned-one: pinned at 525e31b; name it explicitly to update it
 1 revision (4.1 MB) now unreferenced; run `satchel gc` to reclaim
 ```
+
+Each `checking` line is printed on stderr as that skill's remote is looked up,
+so a slow fetch is never silent; `--dry-run` prints them too, because it
+fetches the same way. A pinned skill that update will skip gets no line, since
+nothing is fetched for it.
 
 Naming a skill updates it even when it is pinned, re-pinning it at the new
 commit. Revision directories carry no `.git`, so a skill edited through its
