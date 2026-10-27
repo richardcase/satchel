@@ -85,7 +85,9 @@ func (c *Git) Prepare(ctx context.Context, req Request) ([]Candidate, []string, 
 	if err != nil {
 		var amb *Ambiguous
 		if errors.As(err, &amb) {
-			amb.Header = fmt.Sprintf("skills in %s @ %s:", src.RepoURL, shortSha(sha))
+			// Redacted for the same reason the fetching line is: the header is
+			// shown on the terminal and in CI logs, and RepoURL can carry a token.
+			amb.Header = fmt.Sprintf("skills in %s @ %s:", src.Redacted(), shortSha(sha))
 			amb.Meta = discover.PluginMeta(revPath)
 			amb.Available = brief(available)
 			amb.Resolved = sha

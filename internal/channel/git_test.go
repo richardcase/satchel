@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -378,5 +379,52 @@ func TestGitPrepareReportsTheRepositoryBeforeResolving(t *testing.T) {
 	}
 	if atResolve != "fetching "+src.Redacted()+"...\n" {
 		t.Errorf("progress when git was asked = %q, want the fetching line already written", atResolve)
+	}
+}
+
+// stubGit answers Resolve with a fixed sha and "extracts" a two-skill tree
+// without touching a repository, so a Prepare against a URL git could never
+// reach (one carrying a token) can still run to its ambiguity report.
+type stubGit struct {
+	gitx.Git
+}
+
+func (stubGit) Resolve(context.Context, string, string) (string, error) {
+	return "7c41bf0e1d5855af7b2c4d1e9f0a3b5c6d7e8f90", nil
+}
+
+func (stubGit) Mirror(context.Context, string, string) error { return nil }
+
+func (stubGit) Extract(_ context.Context, _, _, dest string) error {
+	for _, name := range []string{"alpha", "beta"} {
+		dir := filepath.Join(dest, name)
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+		body := "---\nname: " + name + "\ndescription: a skill\n---\n"
+		if err := os.WriteFile(filepath.Join(dir, "SKILL.md"), []byte(body), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func TestGitPrepareAmbiguityHeaderRedactsTheRepositoryURL(t *testing.T) {
+	src, err := source.Parse("https://tok@github.com/o/r")
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	c := NewGit(store.New(t.TempDir()), stubGit{})
+
+	_, _, err = c.Prepare(context.Background(), Request{Source: src})
+	var amb *Ambiguous
+	if !errors.As(err, &amb) {
+		t.Fatalf("Prepare error = %v, want *Ambiguous for a two-skill repository with nothing chosen", err)
+	}
+	if strings.Contains(amb.Header, "tok") {
+		t.Errorf("header = %q, leaks the token the fetching line was redacted to hide", amb.Header)
+	}
+	if !strings.Contains(amb.Header, "https://github.com/o/r.git") {
+		t.Errorf("header = %q, want the redacted repository URL", amb.Header)
 	}
 }
