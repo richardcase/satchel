@@ -445,7 +445,11 @@ func TestRedactedDropsUserinfoFromTheRepoURL(t *testing.T) {
 		{"https://user:tok@github.com/o/r", "https://github.com/o/r.git"},
 		{"https://tok@github.com/o/r.git", "https://github.com/o/r.git"},
 		{"https://github.com/o/r", "https://github.com/o/r.git"},
-		{"git@github.com:o/r.git", "git@github.com:o/r.git"},
+		{"ssh://git@github.com/o/r.git", "ssh://github.com/o/r.git"},
+		// The scp form has no scheme for net/url, and its user part can be a
+		// token as easily as the conventional "git", so it goes too.
+		{"git@github.com:o/r.git", "github.com:o/r.git"},
+		{"token@github.com:o/r.git", "github.com:o/r.git"},
 	} {
 		s, err := Parse(tc.raw)
 		if err != nil {
@@ -461,6 +465,10 @@ func TestParseRejectsCredentialsInAnOCIRegistryHost(t *testing.T) {
 	for _, raw := range []string{
 		"oci://user:secret@ghcr.io/owner/skills:v1",
 		"oci://token@ghcr.io/owner/skills:v1",
+		// Malformed as well: the rejection must come before the errors that
+		// quote the source, or those errors print the credential instead.
+		"oci://user:secret@ghcr.io/owner/skills",
+		"oci://user:secret@ghcr.io:v1",
 	} {
 		s, err := Parse(raw)
 		if err == nil {
