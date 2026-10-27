@@ -266,3 +266,77 @@ func TestUpdateRejectsANameThatIsNotInstalled(t *testing.T) {
 		t.Errorf("error %q should name what was not found", err)
 	}
 }
+
+func TestUpdatePrintsProgressOnStderr(t *testing.T) {
+	h := newHarness(t)
+	dir, _ := installed(t, h)
+	testrepo.Commit(t, dir, map[string]string{"SKILL.md": skillMD + "\nMore.\n"})
+
+	stdout, stderr, err := h.runSplit(t, "update")
+	if err != nil {
+		t.Fatalf("update: %v\n%s%s", err, stdout, stderr)
+	}
+	if !strings.Contains(stderr, "checking demo-skill...\n") {
+		t.Errorf("stderr = %q, want a checking line", stderr)
+	}
+	if strings.Contains(stdout, "checking demo-skill") {
+		t.Errorf("stdout = %q, progress must not land on stdout", stdout)
+	}
+	if !strings.Contains(stdout, "updated demo-skill") {
+		t.Errorf("stdout = %q, the summary must still be printed", stdout)
+	}
+}
+
+func TestUpdateDryRunPrintsProgress(t *testing.T) {
+	h := newHarness(t)
+	installed(t, h)
+	_, stderr, err := h.runSplit(t, "update", "--dry-run")
+	if err != nil {
+		t.Fatalf("update --dry-run: %v\n%s", err, stderr)
+	}
+	if !strings.Contains(stderr, "checking demo-skill...\n") {
+		t.Errorf("stderr = %q, want a checking line: the dry run fetches too", stderr)
+	}
+}
+
+func TestUpdatePrintsNoProgressForAPinnedSkill(t *testing.T) {
+	h := newHarness(t)
+	installed(t, h, "--pin")
+	_, stderr, err := h.runSplit(t, "update")
+	if err != nil {
+		t.Fatalf("update: %v\n%s", err, stderr)
+	}
+	if strings.Contains(stderr, "checking") {
+		t.Errorf("stderr = %q, a skipped pin does no work and must print no progress", stderr)
+	}
+}
+
+func TestUpdatePrintsNoProgressForALocalSkill(t *testing.T) {
+	h := newHarness(t)
+	dir := localDir(t, nil)
+	if out, err := h.run(t, "install", dir); err != nil {
+		t.Fatalf("install: %v\n%s", err, out)
+	}
+	_, stderr, err := h.runSplit(t, "update")
+	if err != nil {
+		t.Fatalf("update: %v\n%s", err, stderr)
+	}
+	if strings.Contains(stderr, "checking") {
+		t.Errorf("stderr = %q, a local skill has nothing to check", stderr)
+	}
+}
+
+func TestInstallPrintsProgressOnStderr(t *testing.T) {
+	h := newHarness(t)
+	url, _ := testrepo.New(t, map[string]string{"SKILL.md": skillMD})
+	stdout, stderr, err := h.runSplit(t, "install", url)
+	if err != nil {
+		t.Fatalf("install: %v\n%s%s", err, stdout, stderr)
+	}
+	if !strings.Contains(stderr, "fetching "+url+"...\n") {
+		t.Errorf("stderr = %q, want a fetching line naming the repository", stderr)
+	}
+	if strings.Contains(stdout, "fetching ") {
+		t.Errorf("stdout = %q, progress must not land on stdout", stdout)
+	}
+}

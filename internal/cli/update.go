@@ -61,8 +61,14 @@ func runUpdate(cmd *cobra.Command, names []string, force, dryRun bool) error {
 		return nil
 	}
 
+	// Progress goes to stderr for the same reason cobra's Println does: it is
+	// commentary, not the command's product. It is passed the same way for a
+	// dry run, because the resolve and fetch happen either way. browse reaches
+	// this function for its update action after its picker has closed, so the
+	// same lines print there, below the list rather than over it.
+	progress := cmd.ErrOrStderr()
 	entries, p, err := update.Plan(cmd.Context(), e.channels(), receipts,
-		update.Options{Names: names, Force: force})
+		update.Options{Names: names, Force: force, Progress: progress})
 	if err != nil {
 		return err
 	}
@@ -78,7 +84,7 @@ func runUpdate(cmd *cobra.Command, names []string, force, dryRun bool) error {
 	var serr, aerr error
 	var linkSkips []string
 	if !p.IsEmpty() {
-		ex := &plan.Executor{DB: h.DB, Out: cmd.OutOrStdout(), Run: newRunner()}
+		ex := &plan.Executor{DB: h.DB, Out: cmd.OutOrStdout(), Progress: progress, Run: newRunner()}
 		aerr = ex.Apply(cmd.Context(), p)
 
 		// A failed Apply is rolled back in memory, but an Exec it already

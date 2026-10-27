@@ -114,6 +114,7 @@ func runInstall(cmd *cobra.Command, raw string, o installOpts) error {
 		VerifyKey:      o.verifyKey,
 		VerifyIdentity: o.verifyIdentity,
 		VerifyIssuer:   o.verifyIssuer,
+		Progress:       cmd.ErrOrStderr(),
 	}
 
 	chosen, warnings, err := ch.Prepare(ctx, req)
@@ -160,7 +161,7 @@ func runInstall(cmd *cobra.Command, raw string, o installOpts) error {
 		return nil
 	}
 
-	ex := &plan.Executor{DB: h.DB, Out: cmd.OutOrStdout(), Run: newRunner()}
+	ex := &plan.Executor{DB: h.DB, Out: cmd.OutOrStdout(), Progress: cmd.ErrOrStderr(), Run: newRunner()}
 	if err := ex.Apply(ctx, p); err != nil {
 		return err
 	}
