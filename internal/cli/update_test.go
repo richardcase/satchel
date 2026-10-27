@@ -340,3 +340,15 @@ func TestInstallPrintsProgressOnStderr(t *testing.T) {
 		t.Errorf("stdout = %q, progress must not land on stdout", stdout)
 	}
 }
+
+func TestInstallDryRunPrintsProgress(t *testing.T) {
+	h := newHarness(t)
+	url, _ := testrepo.New(t, map[string]string{"SKILL.md": skillMD})
+	_, stderr, err := h.runSplit(t, "install", url, "--dry-run")
+	if err != nil {
+		t.Fatalf("install --dry-run: %v\n%s", err, stderr)
+	}
+	if !strings.Contains(stderr, "fetching "+url+"...\n") {
+		t.Errorf("stderr = %q, want a fetching line: the dry run resolves and mirrors too", stderr)
+	}
+}

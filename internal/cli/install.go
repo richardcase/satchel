@@ -282,6 +282,9 @@ func resolveAmbiguity(
 	// in between from installing a tree the listing never showed.
 	lookup := *req
 	lookup.Skills = names
+	// This pass re-reads the revision the listing already extracted, so a
+	// second "fetching" line would announce network work that never happens.
+	lookup.Progress = nil
 	if amb.Resolved != "" {
 		// A channel with no revision to name leaves this empty, and re-reading
 		// a local directory costs another walk of it and nothing more.

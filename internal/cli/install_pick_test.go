@@ -424,3 +424,19 @@ func TestInstallPickerHidesSkillsOccupiedByAForeignSymlink(t *testing.T) {
 		t.Errorf("error = %v, want it to point at `satchel adopt`", err)
 	}
 }
+
+func TestInstallPickerDoesNotReportASecondFetch(t *testing.T) {
+	h := newHarness(t)
+	url, _ := multiRepo(t)
+	h.picker.on, h.picker.choose = true, picks(1)
+
+	_, stderr, err := h.runSplit(t, "install", url, "--agent", "claude")
+	if err != nil {
+		t.Fatalf("install: %v\n%s", err, stderr)
+	}
+	// The pass after the picker re-reads the revision already extracted, so
+	// a second fetching line would announce network work that never happens.
+	if n := strings.Count(stderr, "fetching "); n != 1 {
+		t.Errorf("stderr = %q, want exactly one fetching line, got %d", stderr, n)
+	}
+}
