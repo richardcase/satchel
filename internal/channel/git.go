@@ -49,6 +49,7 @@ type selection struct {
 func (c *Git) Prepare(ctx context.Context, req Request) ([]Candidate, []string, error) {
 	src := req.Source
 
+	progressf(req.Progress, "fetching %s...\n", src.Redacted())
 	sha, err := c.git.Resolve(ctx, src.RepoURL, req.Ref)
 	if err != nil {
 		return nil, nil, err
@@ -269,6 +270,11 @@ func (c *Git) Update(ctx context.Context, rs []*state.Receipt, o UpdateOptions) 
 			verdicts = append(verdicts, v)
 			continue
 		}
+
+		// Written before the resolve, cached or not: the line's job is to name
+		// what the user is waiting on, and a repository resolved once for
+		// several skills still has each of them checked against it.
+		progressf(o.Progress, "checking %s...\n", r.Name)
 
 		key := r.Source + "\x00" + ref
 		got, ok := seen[key]

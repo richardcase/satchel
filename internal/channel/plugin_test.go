@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"io"
@@ -22,10 +23,14 @@ type fakeClaude struct {
 	installed []claudex.Installed
 	err       error
 	calls     int
+	onList    func() // called at the top of List; tests use it to observe timing
 }
 
 func (f *fakeClaude) List(context.Context) ([]claudex.Installed, error) {
 	f.calls++
+	if f.onList != nil {
+		f.onList()
+	}
 	return f.installed, f.err
 }
 func (f *fakeClaude) InstallArgv(id string) []string   { return []string{"claude", "install", id} }
@@ -941,5 +946,42 @@ func TestPluginRemoveFromAnAgentThatHasNothingPlansNothing(t *testing.T) {
 	}
 	if !p.IsEmpty() {
 		t.Errorf("plan = %v, want none: the caller reports what the user typed", p.Describe())
+	}
+}
+
+func TestPluginUpdateReportsEachSkillBeforeAskingClaude(t *testing.T) {
+	c, f := newPluginChannel(
+		claudex.Installed{ID: "a@m", Version: "1.0.0"},
+		claudex.Installed{ID: "b@m", Version: "1.0.0"},
+	)
+	var progress bytes.Buffer
+	var atList string
+	f.onList = func() { atList = progress.String() }
+
+	_, _, err := c.Update(context.Background(), []*state.Receipt{
+		{Name: "a", Channel: "plugin", Source: "a@m", Resolved: "1.0.0"},
+		{Name: "b", Channel: "plugin", Source: "b@m", Resolved: "1.0.0"},
+	}, UpdateOptions{Progress: &progress})
+	if err != nil {
+		t.Fatalf("Update: %v", err)
+	}
+	if atList != "checking a...\nchecking b...\n" {
+		t.Errorf("progress when claude was asked = %q, want both checking lines already written", atList)
+	}
+}
+
+func TestPluginPrepareReportsTheSourceBeforeAskingClaude(t *testing.T) {
+	c, f := newPluginChannel()
+	var progress bytes.Buffer
+	var atList string
+	f.onList = func() { atList = progress.String() }
+
+	req := pluginRequest()
+	req.Progress = &progress
+	if _, _, err := c.Prepare(context.Background(), req); err != nil {
+		t.Fatalf("Prepare: %v", err)
+	}
+	if atList != "checking superpowers@claude-plugins-official...\n" {
+		t.Errorf("progress when claude was asked = %q, want the checking line already written", atList)
 	}
 }

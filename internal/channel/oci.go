@@ -55,6 +55,7 @@ func (c *OCI) Prepare(ctx context.Context, req Request) ([]Candidate, []string, 
 
 	ref := src.OCIRef(req.Ref)
 
+	progressf(req.Progress, "fetching %s...\n", ref)
 	digest, err := c.oci.Resolve(ctx, ref)
 	if err != nil {
 		return nil, nil, err
@@ -240,6 +241,8 @@ func (c *OCI) Update(ctx context.Context, rs []*state.Receipt, o UpdateOptions) 
 			verdicts = append(verdicts, v)
 			continue
 		}
+
+		progressf(o.Progress, "checking %s...\n", r.Name)
 
 		// The tag to resolve against is the one the receipt tracks, which unpin
 		// --ref can have moved away from the tag its source was installed at.

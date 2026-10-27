@@ -350,3 +350,20 @@ func (s Source) DefaultName() string {
 		return s.repo
 	}
 }
+
+// Redacted is the form of RepoURL that is safe to print. Parse keeps a URL's
+// userinfo in RepoURL so that git receives exactly what the user gave it,
+// which means RepoURL can carry a token. This drops the userinfo entirely
+// rather than using url.URL.Redacted, which keeps the username: a bare token
+// before the @ is a username as far as the parser is concerned. A RepoURL
+// that net/url cannot parse (the scp-like git@host:path form is stored
+// verbatim) is returned as it is, since that form's user part is the
+// conventional "git" and names no secret.
+func (s Source) Redacted() string {
+	u, err := url.Parse(s.RepoURL)
+	if err != nil || u.User == nil {
+		return s.RepoURL
+	}
+	u.User = nil
+	return u.String()
+}

@@ -439,3 +439,20 @@ func TestOCIDefaultNameIsTheLastRepositorySegment(t *testing.T) {
 		t.Errorf("DefaultName() = %q, want %q", got, want)
 	}
 }
+
+func TestRedactedDropsUserinfoFromTheRepoURL(t *testing.T) {
+	for _, tc := range []struct{ raw, want string }{
+		{"https://user:tok@github.com/o/r", "https://github.com/o/r.git"},
+		{"https://tok@github.com/o/r.git", "https://github.com/o/r.git"},
+		{"https://github.com/o/r", "https://github.com/o/r.git"},
+		{"git@github.com:o/r.git", "git@github.com:o/r.git"},
+	} {
+		s, err := Parse(tc.raw)
+		if err != nil {
+			t.Fatalf("Parse(%q): %v", tc.raw, err)
+		}
+		if got := s.Redacted(); got != tc.want {
+			t.Errorf("Parse(%q).Redacted() = %q, want %q", tc.raw, got, tc.want)
+		}
+	}
+}
