@@ -314,3 +314,32 @@ func TestFrontmatterWithNoAgentsIsUnrestricted(t *testing.T) {
 		t.Errorf("Agents = %v, want none: a skill with no agents field is unrestricted", got.Agents)
 	}
 }
+
+func TestFrontmatterToleratesUnquotedColonInValue(t *testing.T) {
+	body := []byte("---\nname: software-factory\ndescription: Shared language for designing a software factory: the tasks it runs.\ndisable-model-invocation: true\n---\n")
+
+	got, err := Frontmatter(body)
+	if err != nil {
+		t.Fatalf("Frontmatter: %v", err)
+	}
+	if got.Name != "software-factory" {
+		t.Errorf("Name = %q, want software-factory", got.Name)
+	}
+	want := "Shared language for designing a software factory: the tasks it runs."
+	if got.Description != want {
+		t.Errorf("Description = %q, want %q", got.Description, want)
+	}
+}
+
+func TestFrontmatterToleratesUnquotedColonWithQuotesInValue(t *testing.T) {
+	body := []byte("---\nname: demo\ndescription: Say \"hi\": then C:\\path # not a comment\n---\n")
+
+	got, err := Frontmatter(body)
+	if err != nil {
+		t.Fatalf("Frontmatter: %v", err)
+	}
+	want := `Say "hi": then C:\path # not a comment`
+	if got.Description != want {
+		t.Errorf("Description = %q, want %q", got.Description, want)
+	}
+}

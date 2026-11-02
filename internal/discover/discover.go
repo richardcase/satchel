@@ -86,10 +86,53 @@ func Frontmatter(data []byte) (Meta, error) {
 	}
 
 	var m Meta
-	if err := yaml.Unmarshal(rest[:end], &m); err != nil {
-		return Meta{}, fmt.Errorf("parse frontmatter: %w", err)
+	err := yaml.Unmarshal(rest[:end], &m)
+	if err == nil {
+		return m, nil
 	}
-	return m, nil
+	// Authors write descriptions as prose, so an unquoted ": " is common, and
+	// the agents load such files anyway by quoting the offending values and
+	// retrying. Refusing what every agent accepts would fail a whole repo's
+	// install over one sentence. The original error is kept so frontmatter
+	// that is broken for any other reason reports what is actually wrong.
+	var retry Meta
+	if yaml.Unmarshal(quoteProblemValues(rest[:end]), &retry) == nil {
+		return retry, nil
+	}
+	return Meta{}, fmt.Errorf("parse frontmatter: %w", err)
+}
+
+// quoteProblemValues double-quotes each top-level plain scalar that YAML would
+// misread: one containing ": " or " #". Values that open a flow, block, anchor,
+// alias, tag or quoted scalar are left alone, since quoting them would change
+// their meaning rather than repair it.
+func quoteProblemValues(block []byte) []byte {
+	lines := bytes.Split(block, []byte("\n"))
+	for i, line := range lines {
+		key, value, found := bytes.Cut(line, []byte(": "))
+		if !found || !isPlainKey(key) {
+			continue
+		}
+		value = bytes.TrimSpace(value)
+		if len(value) == 0 || bytes.IndexByte([]byte(`"'[{|>&*!`), value[0]) >= 0 {
+			continue
+		}
+		if !bytes.Contains(value, []byte(": ")) && !bytes.Contains(value, []byte(" #")) {
+			continue
+		}
+		escaped := strings.NewReplacer(`\`, `\\`, `"`, `\"`).Replace(string(value))
+		lines[i] = fmt.Appendf(nil, "%s: \"%s\"", key, escaped)
+	}
+	return bytes.Join(lines, []byte("\n"))
+}
+
+func isPlainKey(key []byte) bool {
+	if len(key) == 0 {
+		return false
+	}
+	return bytes.IndexFunc(key, func(r rune) bool {
+		return (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') && (r < '0' || r > '9') && r != '_' && r != '-'
+	}) < 0
 }
 
 // isFence reports whether line is a frontmatter delimiter: exactly ---, allowing
