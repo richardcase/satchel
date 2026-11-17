@@ -6,6 +6,7 @@
   outputs =
     { self, nixpkgs }:
     let
+      description = "Install, update and remove agent skills from git";
       systems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -42,13 +43,16 @@
           nativeCheckInputs = [ pkgs.git ];
           __darwinAllowLocalNetworking = true;
 
+          # registry-check maintains registry/skills.json in CI and is not part
+          # of the CLI; subPackages would drop it but would also limit the tests
+          # to cmd/satchel.
           postInstall = ''
             rm "$out/bin/registry-check"
             wrapProgram "$out/bin/satchel" --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.git ]}
           '';
 
           meta = {
-            description = "Install, update and remove agent skills from git";
+            inherit description;
             homepage = "https://github.com/richardcase/satchel";
             license = pkgs.lib.licenses.asl20;
             mainProgram = "satchel";
@@ -61,7 +65,7 @@
         default = {
           type = "app";
           program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/satchel";
-          meta.description = "Install, update and remove agent skills from git";
+          meta = { inherit description; };
         };
       });
 
