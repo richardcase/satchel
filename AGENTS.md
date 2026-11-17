@@ -28,13 +28,36 @@ make fmt          # golangci-lint fmt (gofumpt + goimports)
 make build        # go build -o satchel ./cmd/satchel
 make tidy-check   # go mod tidy, then fail if go.mod/go.sum changed
 make snapshot     # goreleaser release --snapshot --clean
+nix build         # build the flake and run the tests in the Nix sandbox
+nix flake check --all-systems  # evaluate the flake for every system
+nix develop       # shell with go, golangci-lint and goreleaser from nixpkgs
+nix fmt           # format flake.nix (nixfmt)
 ```
 
 **Definition of done:** `make test && make lint && make tidy-check` all pass,
 and `README.md` reflects any user-visible change (see
 [Keeping the README current](#keeping-the-readme-current)). Add
-`goreleaser check` only when `.goreleaser.yaml` changes. The commands mirror the
-three jobs in `.github/workflows/ci.yml`, so a green local run means a green PR.
+`goreleaser check` only when `.goreleaser.yaml` changes, and `nix build` when
+`go.mod`, `go.sum` or `flake.nix` change. The commands mirror the four jobs in
+`.github/workflows/ci.yml`, so a green local run means a green PR.
+
+### Nix flake
+
+`flake.nix` builds satchel from source with nixpkgs' `buildGoModule`. Its Go is
+nixpkgs' current release, not the `mise.toml` pin; the `go` line in `go.mod` is
+the floor both must meet. Two things need refreshing by hand:
+
+- **`vendorHash`**, whenever `go.mod` or `go.sum` change — Dependabot's gomod
+  PRs included. The `nix` CI job fails with `hash mismatch` until it is fixed.
+  Set `vendorHash` to `pkgs.lib.fakeHash`, run `nix build`, paste the `got:`
+  hash, and commit `fix(nix): refresh vendorHash` (on a Dependabot PR, push
+  that commit to its branch).
+- **`flake.lock`**, which Dependabot does not update. Run `nix flake update`
+  now and then and commit `chore(nix): update flake.lock`.
+
+A flake cannot see its tag, so a Nix build reports `0-unstable-<date>`; see
+[ADR 0001](docs/adr/0001-nix-flake-version-from-git.md). nixpkgs no longer
+supports `x86_64-darwin`, so the flake does not list it.
 
 ## Commit messages
 

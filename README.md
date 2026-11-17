@@ -172,7 +172,8 @@ brew install richardcase/tap/satchel
 ```
 
 (macOS only — the Homebrew formula publishes a cask. On Linux, use the
-[pacman repository](#arch-linux), the `.deb`/`.rpm` packages, or the tarball below.)
+[pacman repository](#arch-linux), [Nix](#nix--nixos), the `.deb`/`.rpm`
+packages, or the tarball below.)
 
 Or grab a binary, `.deb`, `.rpm` or `.pkg.tar.zst` from the [releases page](https://github.com/richardcase/satchel/releases),
 or build from source with `go install github.com/richardcase/satchel/cmd/satchel@latest`.
@@ -200,6 +201,36 @@ sudo pacman -Sy satchel
 
 New releases then arrive with `pacman -Syu`. Stable releases only: release
 candidates are not published to the repository.
+
+### Nix / NixOS
+
+The repository is a flake, built from source for `x86_64-linux`,
+`aarch64-linux` and `aarch64-darwin` (nixpkgs no longer supports Intel Macs;
+use Homebrew there). Run it without installing, or add it to your profile:
+
+```bash
+nix run github:richardcase/satchel -- --help
+nix profile install github:richardcase/satchel
+```
+
+For NixOS or home-manager, add the flake as an input:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    satchel.url = "github:richardcase/satchel";
+    satchel.inputs.nixpkgs.follows = "nixpkgs";
+  };
+}
+```
+
+then put `inputs.satchel.packages.${pkgs.stdenv.hostPlatform.system}.default`
+in `environment.systemPackages` or `home.packages`.
+
+A flake cannot see the tag it was fetched at, so `satchel version` reports
+`0-unstable-<date>` and the commit rather than a release number. `git` comes
+with the package.
 
 ### Upgrading from skillsctl
 
@@ -1038,6 +1069,10 @@ make snapshot    # build release artifacts locally, into dist/
 ```
 
 CI installs the same `mise.toml`, so local and CI tool versions never drift.
+
+With Nix, `nix develop` gives the same tools from nixpkgs (its Go is
+nixpkgs' current release, not the `mise.toml` pin), and `nix build` builds
+and tests the flake.
 
 ## Contributing
 
