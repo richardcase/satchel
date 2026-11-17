@@ -9,3 +9,7 @@ mise.local.toml
 
 # Subagent-driven-development scratch workspaces (ledgers, briefs, review packages).
 /.superpowers/
+
+# nix build output links.
+/result
+/result-*
