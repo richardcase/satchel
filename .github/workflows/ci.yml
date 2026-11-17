@@ -81,4 +81,11 @@ jobs:
           test "$(ls result/bin)" = satchel
           grep -q -- '-git-[0-9]' result/bin/satchel
       - name: Version is derived from the commit
-        run: nix run . -- version 2>&1 | grep -Eq '^satchel 0-unstable-[0-9]{4}-[0-9]{2}-[0-9]{2} \([0-9a-f]{7}, '
+        run: |
+          day=$(TZ=UTC git log -1 --format=%cd --date=format-local:%Y-%m-%d)
+          expected="satchel 0-unstable-$day ($(git rev-parse --short=7 HEAD), ${day}T"
+          got=$(nix run . -- version 2>&1)
+          case "$got" in
+            "$expected"*) ;;
+            *) echo "::error::expected '$expected...', got '$got'"; exit 1 ;;
+          esac
